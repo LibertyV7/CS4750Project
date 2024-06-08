@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS Member (
     memberID INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
-    computingID VARCHAR(50) NOT NULL,
+    computingID VARCHAR(6) NOT NULL,
     provideSemester VARCHAR(50) NOT NULL,
     duesPaid BOOLEAN NOT NULL DEFAULT 0
 );
