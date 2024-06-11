@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provisional Requirements List</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Provisional Requirements List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Requirement ID</th>
+                <th>Provie ID</th>
+                <th>Completed </th>
+                <th>Attendance</th>
+                <th>Full Meeting</th>
+                <th>History Tour </th>
+                <th>Major Service</th>
+                <th>Minor Service</th>
+                <th>Debate </th>
+                <th> Literary Presentation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in provierequirements %}
+                <tr>
+                    <td>{{ member[0]}}</td>
+                    <td>{{ member[1]}}</td>
+                    <td>{{ member[2]}}</td>
+                    <td>{{ member[3]}}</td>
+                    <td>{{ member[4]}}</td>
+                    <td>{{ member[5]}}</td>
+                    <td>{{ member[6]}}</td>
+                    <td>{{ member[7]}}</td>
+                    <td>{{ member[8]}}</td>
+                    <td>{{ member[9]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

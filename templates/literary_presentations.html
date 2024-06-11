@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Presentation List</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Literary Presentation List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Literary Presentation ID</th>
+                <th>Date</th>
+                <th>Member ID </th>
+                <th>Title</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for presentation in literarypresentations %}
+                <tr>
+                    <td>{{ presentation[0]}}</td>
+                    <td>{{ presentation[1]}}</td>
+                    <td>{{ presentation[2]}}</td>
+                    <td>{{ presentation[3]}}</td>
+                    <td>{{ presentation[4]}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
