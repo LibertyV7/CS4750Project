@@ -80,9 +80,9 @@ def provisional_members():
         if value:
             if key == 'completed':
                 if value == 'completed':
-                    query += "AND completed=1"
+                    query += " AND completed=1"
                 if value == 'uncompleted':
-                    query += "AND completed=0"
+                    query += " AND completed=0"
             else:
                 query += f" AND {key} LIKE %s"
                 params.append(f"{value}%")
@@ -100,13 +100,93 @@ def provisional_members():
 
 @app.route('/requirements')
 def requirements():
+    filter = {
+        'm.computingID': request.args.get('id'),
+        'm.firstName': request.args.get('firstName'),
+        'm.lastName': request.args.get('lastName')
+    }
+    sort = request.args.get('sort')
+    query = """
+        SELECT pr.*, m.firstName, m.lastName, m.computingID, m.duesPaid 
+        FROM provierequirements pr
+        JOIN provisionalmember pm ON pr.provID = pm.provID
+        JOIN member m ON pm.computingID = m.computingID
+    """
+    params = []
+    for key,value in filter.items():
+        if value:
+            query += f" AND {key} LIKE %s"
+            params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from provierequirements')
+    cursor.execute(query, params)
+    provierequirements = cursor.fetchall()
+    cursor.close()
+    print(provierequirements)
+    conn.close()
+    return render_template('requirements.html', provierequirements=provierequirements)
+
+@app.route('/edit_requirements', methods=['GET', 'POST'])
+def edit_requirements():
+    if request.method == 'POST':
+        updates = request.form.to_dict()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Map column indices to database column names
+        column_mapping = {
+            '2': 'completed',
+            '3': 'attendance',
+            '4': 'fullMeeting',
+            '5': 'historyTour',
+            '6': 'majorService',
+            '7': 'minorService',
+            '8': 'debate',
+            '9': 'literaryPresentation'
+        }
+
+        # Fetch current state to determine what was unchecked
+        query = """
+            SELECT provID, completed, attendance, fullMeeting, historyTour, majorService, minorService, debate, literaryPresentation
+            FROM provierequirements
+        """
+        cursor.execute(query)
+        current_state = cursor.fetchall()
+        current_state_dict = {str(record[0]): record[1:] for record in current_state}
+
+        for provID, state in current_state_dict.items():
+            for col, db_col in column_mapping.items():
+                field_name = f"{provID}_{col}"
+                new_value = updates.get(field_name, 'false') == 'true'
+                current_value = state[int(col) - 2]  # Adjusting for 0-based index
+
+                if new_value != current_value:
+                    query = f"UPDATE provierequirements SET {db_col} = %s WHERE provID = %s"
+                    cursor.execute(query, (new_value, provID))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect('/requirements')
+
+    # Fetch data for display
+    query = """
+        SELECT pr.*, m.firstName, m.lastName, m.computingID, m.duesPaid 
+        FROM provierequirements pr
+        JOIN provisionalmember pm ON pr.provID = pm.provID
+        JOIN member m ON pm.computingID = m.computingID
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute(query)
     provierequirements = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('requirements.html', provierequirements=provierequirements)
+
+    return render_template('edit_requirements.html', provierequirements=provierequirements)
+
 
 @app.route('/debates')
 def debates():

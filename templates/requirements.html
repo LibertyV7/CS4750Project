@@ -81,11 +81,11 @@
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
-    <h1>Member List</h1>
+    <h1>Provisional Member Requirement List</h1>
 
-    <form method="GET" action="/members">
+    <form method="GET" action="/requirements">
         <div class="input-section">
-            <label for="id">Member ID:</label>
+            <label for="id">Computing ID:</label>
             <input type="text" name="id" id="id" placeholder="Search">
             <label for="firstName">First Name:</label>
             <input type="text" name="firstName" id="firstName" placeholder="Search">
@@ -94,39 +94,33 @@
         </div>
 
         <div class="input-section">
-            <label for="computingID">Computing ID:</label>
-            <input type="text" name="computingID" id="computingID" placeholder="Search">
-            <label for="provieSemester">Provie Semester:</label>
-            <input type="text" name="provieSemester" id="provieSemester" placeholder="Search">
-            <label for="duesPaid">Dues Paid:</label>
-            <select name="duesPaid" id="duesPaid">
-                <option value="select">Select One</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Not Paid</option>
-            </select>
-        </div>
-
-        <div class="input-section">
             <label for="sort-select">Sort By:</label>
             <select name="sort" id="sort-select">
-                <option value="memberID">ID</option>
+                <option value="computingID">ID</option>
                 <option value="firstName">First Name</option>
                 <option value="lastName">Last Name</option>
-                <option value="computingID">Computing ID</option>
-                <option value="provideSemester">Provie Semester</option>
+                <option value="completed">Completed</option>
+                <option value="fullMeeting">Full Meeting</option>
+                <option value="historyTour">History Tour</option>
+                <option value="majorService">Major Service</option>
+                <option value="minorService">Minor Service</option>
+                <option value="debate">Debate</option>
+                <option value="literaryPresentation">Literary Presentation</option>
                 <option value="duesPaid">Dues Paid</option>
             </select>
         </div>
 
         <button type="submit">Filter and Sort</button>
+        <a href="/edit_requirements">Edit Requirements</a>
     </form>
 
     <div id="result-container">
         <table>
             <thead>
                 <tr>
-                    <th>Requirement ID</th>
-                    <th>Provie ID</th>
+                    <th>Computing ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Completed </th>
                     <th>Attendance</th>
                     <th>Full Meeting</th>
@@ -134,14 +128,16 @@
                     <th>Major Service</th>
                     <th>Minor Service</th>
                     <th>Debate </th>
-                    <th> Literary Presentation</th>
+                    <th>Literary Presentation</th>
+                    <th>Dues Paid</th>
                 </tr>
             </thead>
         <tbody>
             {% for requirement in provierequirements %}
                 <tr>
-                    <td>{{ requirement[0]}}</td>
-                    <td>{{ requirement[1]}}</td>
+                    <td>{{ requirement[12] }}</td>
+                    <td>{{ requirement[10]}}</td>
+                    <td>{{ requirement[11]}}</td>
                     <td>{{ requirement[2] | status_to_check}}</td>
                     <td>{{ requirement[3] | status_to_check}}</td>
                     <td>{{ requirement[4] | status_to_check}}</td>
@@ -150,6 +146,7 @@
                     <td>{{ requirement[7] | status_to_check}}</td>
                     <td>{{ requirement[8] | status_to_check}}</td>
                     <td>{{ requirement[9] | status_to_check}}</td>
+                    <td>{{ requirement[13] | status_to_check }}</td>
                 </tr>
             {% endfor %}
         </tbody>

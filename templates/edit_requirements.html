@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Provisional Member Requirements</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation styles */
+        nav {
+            background-color: #960001;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #b40b0c;
+        }
+
+        /* Form and table styles */
+        form {
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/members">Members</a>
+        <a href="/provisional-members">Provisional Members</a>
+        <a href="/requirements">Requirements</a>
+        <a href="/debates">Debates</a>
+        <a href="/literary-presentations">Literary Presentations</a>
+        <a href="/officers">Officers</a>
+    </nav>
+    <h1>Edit Provisional Member Requirements</h1>
+
+    <form method="POST" action="/edit_requirements">
+        <div id="result-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Computing ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Completed</th>
+                        <th>Attendance</th>
+                        <th>Full Meeting</th>
+                        <th>History Tour</th>
+                        <th>Major Service</th>
+                        <th>Minor Service</th>
+                        <th>Debate</th>
+                        <th>Literary Presentation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for requirement in provierequirements %}
+                        <tr>
+                            <td>{{ requirement[12] }}</td>
+                            <td>{{ requirement[10] }}</td>
+                            <td>{{ requirement[11] }}</td>
+                            {% for i in range(2, 11) %}
+                                <td>
+                                    <input type="checkbox" name="{{ requirement[0] }}_{{ i }}" value="true" {% if requirement[i] %}checked{% endif %}>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="submit">Update Requirements</button>
+    </form>
+</body>
+</html>
