@@ -3,16 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Welcome to Your App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .channel {
+            margin-top: 20px;
+        }
+        .channel a {
+            display: block;
+            padding: 10px;
+            background-color: #960001
+
+        ;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .channel a:hover {
+            background-color: #b40b0c
+        ;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Washsoc</h1>
-    <ul>
-        <li><a href="/members">Members</a></li>
-        <li><a href="/provisional-members">Provisional Member</a></li>
-        <li><a href="/requirements">Requirements</a></li>
-        <li><a href="/literary-presentations">Literary Presentations</a></li>
-        <li><a href="/officers">Officers</a></li>
-    </ul>
+    <div class="container">
+        <h1>The Washington Society</h1>
+        <div class="channel">
+            <a href="/members">Members</a>
+            <a href="/provisional-members">Provisional Members</a>
+            <a href="/requirements">Requirements</a>
+            <a href="/debates">Debates</a>
+            <a href="/literary-presentations">Literary Presentations</a>
+            <a href="/officers">Officers</a>
+        </div>
+    </div>
 </body>
 </html>

@@ -3,17 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Items List</title>
+    <title>Member List</title>
     <style>
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation styles */
+        nav {
+            background-color: #960001;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #b40b0c;
+        }
+
+        /* Form and table styles */
+        form {
+            margin: 20px 0;
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input,
+        .input-section select {
+            width: 150px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
         table {
-            width: 50%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 18px;
-            text-align: left;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
         }
         th, td {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid #ddd;
         }
         th {
@@ -22,31 +72,80 @@
     </style>
 </head>
 <body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/members">Members</a>
+        <a href="/provisional-members">Provisional Members</a>
+        <a href="/requirements">Requirements</a>
+        <a href="/debates">Debates</a>
+        <a href="/literary-presentations">Literary Presentations</a>
+        <a href="/officers">Officers</a>
+    </nav>
     <h1>Member List</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Computing ID</th>
-                <th>Provie Semester</th>
-                <th> Dues Paid</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for member in members %}
+
+    <form method="GET" action="/members">
+        <div class="input-section">
+            <label for="id">Member ID:</label>
+            <input type="text" name="id" id="id" placeholder="Search">
+            <label for="firstName">First Name:</label>
+            <input type="text" name="firstName" id="firstName" placeholder="Search">
+            <label for="lastName">Last Name:</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Search">
+        </div>
+
+        <div class="input-section">
+            <label for="computingID">Computing ID:</label>
+            <input type="text" name="computingID" id="computingID" placeholder="Search">
+            <label for="provieSemester">Provie Semester:</label>
+            <input type="text" name="provieSemester" id="provieSemester" placeholder="Search">
+            <label for="duesPaid">Dues Paid:</label>
+            <select name="duesPaid" id="duesPaid">
+                <option value="select">Select One</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Not Paid</option>
+            </select>
+        </div>
+
+        <div class="input-section">
+            <label for="sort-select">Sort By:</label>
+            <select name="sort" id="sort-select">
+                <option value="memberID">ID</option>
+                <option value="firstName">First Name</option>
+                <option value="lastName">Last Name</option>
+                <option value="computingID">Computing ID</option>
+                <option value="provideSemester">Provie Semester</option>
+                <option value="duesPaid">Dues Paid</option>
+            </select>
+        </div>
+
+        <button type="submit">Filter and Sort</button>
+    </form>
+
+    <div id="result-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ member[0] }}</td>
-                    <td>{{ member[1]}}</td>
-                    <td>{{ member[2]}}</td>
-                    <td>{{ member[3]}}</td>
-                    <td>{{ member[4] }}</td>
-                    <td>{{ member[5] }}</td>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Computing ID</th>
+                    <th>Provie Semester</th>
+                    <th>Dues Paid</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a href="provisional-member.html">Go to Other Page</a>
+            </thead>
+            <tbody>
+                {% for member in members %}
+                    <tr>
+                        <td>{{ member[0] }}</td>
+                        <td>{{ member[1] }}</td>
+                        <td>{{ member[2] }}</td>
+                        <td>{{ member[3] }}</td>
+                        <td>{{ member[4] }}</td>
+                        <td>{{ member[5] | status_to_check }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

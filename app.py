@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 
 app = Flask(__name__)
@@ -17,24 +17,76 @@ def get_db_connection():
 def index():
     return render_template('home.html')
 
+@app.template_filter('status_to_check')
+def status_to_check(value):
+    return '✔️' if value else '❌'
 
 @app.route('/members')
 def members():  # put application's code here
+    filters = {
+        'memberID': request.args.get('id'),
+        'firstName': request.args.get('firstName'),
+        'lastName': request.args.get('lastName'),
+        'computingID': request.args.get('computingID'),
+        'provideSemester': request.args.get('provieSemester'),
+        'duesPaid': request.args.get('duesPaid')
+    }
+    sort = request.args.get('sort')
+    query = "SELECT * FROM member WHERE 1=1"
+    params = []
+
+    for key,value in filters.items():
+        if value:
+            if key == 'duesPaid':
+                if value == 'paid':
+                    query += " AND duesPaid=1"
+                elif value == 'unpaid':
+                    query += " AND duesPaid=0"
+            else:
+                query += f" AND {key} LIKE %s"
+                params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
+
+
+    print(query)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from member')
+    cursor.execute(query, params)
     members = cursor.fetchall()
     cursor.close()
     conn.close()
-    print(members)
     return render_template('members.html', members=members)
+
 
 
 @app.route('/provisional-members')
 def provisional_members():
+    filters = {
+        'm.memberID': request.args.get('id'),
+        'firstName': request.args.get('firstName'),
+        'lastName': request.args.get('lastName'),
+        'completed': request.args.get('completed')
+    }
+    sort = request.args.get('sort')
+    query = "SELECT pm.*, m.firstName, m.lastName FROM provisionalmember pm JOIN member m ON pm.memberID = m.memberID WHERE 1 = 1"
+    params = []
+    for key,value in filters.items():
+        if value:
+            if key == 'completed':
+                if value == 'completed':
+                    query += "AND completed=1"
+                if value == 'uncompleted':
+                    query += "AND completed=0"
+            else:
+                query += f" AND {key} LIKE %s"
+                params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
+    print(query)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from provisionalmember')
+    cursor.execute(query, params)
     provisionalmembers = cursor.fetchall()
     cursor.close()
     conn.close()
