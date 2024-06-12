@@ -8,7 +8,7 @@ db_config = {
     'password': 'ponyo123',
     'host': 'localhost',
     'port': 3306,
-    'database': 'washsoc'
+    'database': 'WashingtonSociety'
 }
 def get_db_connection():
     conn = mysql.connector.connect(**db_config)
@@ -24,24 +24,28 @@ def status_to_check(value):
 @app.route('/members')
 def members():  # put application's code here
     filters = {
-        'memberID': request.args.get('id'),
+        'computingID': request.args.get('id'),
         'firstName': request.args.get('firstName'),
         'lastName': request.args.get('lastName'),
-        'computingID': request.args.get('computingID'),
-        'provideSemester': request.args.get('provieSemester'),
+        'memType': request.args.get('memberType'),
+        'provieSemester': request.args.get('provieSemester'),
         'duesPaid': request.args.get('duesPaid')
     }
     sort = request.args.get('sort')
     query = "SELECT * FROM member WHERE 1=1"
     params = []
 
-    for key,value in filters.items():
+    for key, value in filters.items():
         if value:
-            if key == 'duesPaid':
+            if key == 'memType' or key == 'provieSemester':
+                if value != 'select':
+                    query += f" AND {key} LIKE %s"
+                    params.append(f"{value}%")
+            elif key == 'duesPaid':
                 if value == 'paid':
-                    query += " AND duesPaid=1"
+                    query += " AND duesPaid = 1"
                 elif value == 'unpaid':
-                    query += " AND duesPaid=0"
+                    query += " AND duesPaid = 0"
             else:
                 query += f" AND {key} LIKE %s"
                 params.append(f"{value}%")
@@ -54,6 +58,7 @@ def members():  # put application's code here
     cursor = conn.cursor()
     cursor.execute(query, params)
     members = cursor.fetchall()
+    print(members)
     cursor.close()
     conn.close()
     return render_template('members.html', members=members)
@@ -63,13 +68,13 @@ def members():  # put application's code here
 @app.route('/provisional-members')
 def provisional_members():
     filters = {
-        'm.memberID': request.args.get('id'),
+        'm.computingID': request.args.get('id'),
         'firstName': request.args.get('firstName'),
         'lastName': request.args.get('lastName'),
         'completed': request.args.get('completed')
     }
     sort = request.args.get('sort')
-    query = "SELECT pm.*, m.firstName, m.lastName FROM provisionalmember pm JOIN member m ON pm.memberID = m.memberID WHERE 1 = 1"
+    query = "SELECT pm.*, m.firstName, m.lastName FROM provisionalmember pm JOIN member m ON pm.computingID = m.computingID WHERE 1 = 1"
     params = []
     for key,value in filters.items():
         if value:
@@ -88,6 +93,7 @@ def provisional_members():
     cursor = conn.cursor()
     cursor.execute(query, params)
     provisionalmembers = cursor.fetchall()
+    print(provisionalmembers)
     cursor.close()
     conn.close()
     return render_template('provisional-member.html', provisionalmembers=provisionalmembers)
