@@ -1,5 +1,17 @@
+DROP TABLE IF EXISTS MemberHumorousDebate;
+DROP TABLE IF EXISTS MemberSeriousDebate;
+DROP TABLE IF EXISTS HumorousDebate;
+DROP TABLE IF EXISTS SeriousDebate;
+DROP TABLE IF EXISTS LiteraryPresentation;
+DROP TABLE IF EXISTS ProvieRequirements;
+DROP TABLE IF EXISTS ProvisionalMember;
+DROP TABLE IF EXISTS Officers;
+DROP TABLE IF EXISTS Debate;
+DROP TABLE IF EXISTS Member;
+
+
 CREATE TABLE IF NOT EXISTS Member (
-    computingID VARCHAR(6) PRIMARY KEY NOT NULL,
+    computingID VARCHAR(7) PRIMARY KEY NOT NULL,
     firstName VARCHAR(50) NOT NULL,
     lastName VARCHAR(50) NOT NULL,
     memType VARCHAR(10),
@@ -9,14 +21,14 @@ CREATE TABLE IF NOT EXISTS Member (
 
 CREATE TABLE IF NOT EXISTS ProvisionalMember (
     provID INT AUTO_INCREMENT PRIMARY KEY,
-    computingID VARCHAR(6) NOT NULL,
+    computingID VARCHAR(7) NOT NULL,
     completed BOOLEAN NOT NULL DEFAULT 0,
     FOREIGN KEY (computingID) REFERENCES Member(computingID)
 );
 
 CREATE TABLE IF NOT EXISTS Officers(
     officerID INT AUTO_INCREMENT PRIMARY KEY,
-    computingID VARCHAR(6) NOT NULL,
+    computingID VARCHAR(7) NOT NULL,
     position VARCHAR(50),
     FOREIGN KEY (computingID) REFERENCES Member(computingID)
 );
@@ -47,20 +59,18 @@ CREATE TABLE IF NOT EXISTS Debate (
     qualityOverall VARCHAR(10),
     sentimentOverall VARCHAR(10),
     CONSTRAINT chk_debateType CHECK (debateType IN ('Humorous', 'Serious')),
-    CONSTRAINT chk_qualityOverall CHECK (qualityOverall IN ('Government',
-																												    'Opposition')),
-    CONSTRAINT chk_sentimentOverall CHECK (sentimentOverall IN ('In Favor',
-																														   'Against'))
+    CONSTRAINT chk_qualityOverall CHECK (qualityOverall IN ('Government', 'Opposition')),
+    CONSTRAINT chk_sentimentOverall CHECK (sentimentOverall IN ('In Favor','Against'))
 );
 
 CREATE TABLE IF NOT EXISTS HumorousDebate (
     debateID INT PRIMARY KEY,
-    computingID_gov1 VARCHAR(6),
-    computingID_gov2 VARCHAR(6),
-    computingID_gov3 VARCHAR(6),
-    computingID_opp1 VARCHAR(6),
-    computingID_opp2 VARCHAR(6),
-    computingID_opp3 VARCHAR(6),
+    computingID_gov1 VARCHAR(7),
+    computingID_gov2 VARCHAR(7),
+    computingID_gov3 VARCHAR(7),
+    computingID_opp1 VARCHAR(7),
+    computingID_opp2 VARCHAR(7),
+    computingID_opp3 VARCHAR(7),
     FOREIGN KEY (debateID) REFERENCES Debate(debateID),
     FOREIGN KEY (computingID_gov1) REFERENCES Member(computingID),
     FOREIGN KEY (computingID_gov2) REFERENCES Member(computingID),
@@ -72,10 +82,10 @@ CREATE TABLE IF NOT EXISTS HumorousDebate (
 
 CREATE TABLE IF NOT EXISTS SeriousDebate (
     debateID INT PRIMARY KEY,
-    computingID_minister_of_government VARCHAR(6),
-    computingID_member_of_government VARCHAR(6),
-    computingID_leader_of_opposition VARCHAR(6),
-    computingID_member_of_opposition VARCHAR(6),
+    computingID_minister_of_government VARCHAR(7),
+    computingID_member_of_government VARCHAR(7),
+    computingID_leader_of_opposition VARCHAR(7),
+    computingID_member_of_opposition VARCHAR(7),
     FOREIGN KEY (debateID) REFERENCES Debate(debateID),
     FOREIGN KEY (computingID_minister_of_government) REFERENCES Member(computingID),
     FOREIGN KEY (computingID_member_of_government) REFERENCES Member(computingID),
@@ -86,14 +96,14 @@ CREATE TABLE IF NOT EXISTS SeriousDebate (
 CREATE TABLE IF NOT EXISTS LiteraryPresentation (
     literaryPresentationID INT AUTO_INCREMENT PRIMARY KEY,
     presentationDate DATE NOT NULL,
-    computingID INT NOT NULL,
+    computingID VARCHAR(7) NOT NULL,
     title VARCHAR(255),
     author VARCHAR(50),
     FOREIGN KEY (computingID) REFERENCES Member(computingID)
 );
 
 CREATE TABLE IF NOT EXISTS MemberHumorousDebate (
-    computingID INT NOT NULL,
+    computingID VARCHAR(7) NOT NULL,
     debateID INT NOT NULL,
     PRIMARY KEY (computingID, debateID),
     FOREIGN KEY (computingID) REFERENCES Member(computingID),
@@ -101,12 +111,22 @@ CREATE TABLE IF NOT EXISTS MemberHumorousDebate (
 );
 
 CREATE TABLE IF NOT EXISTS MemberSeriousDebate (
-    computingID INT,
-    debateID INT,
+    computingID VARCHAR(7) NOT NULL,
+    debateID INT NOT NULL,
     PRIMARY KEY (computingID, debateID),
     FOREIGN KEY (computingID) REFERENCES Member(computingID),
     FOREIGN KEY (debateID) REFERENCES SeriousDebate(debateID)
 );
+DELETE FROM Member;
+DELETE FROM LiteraryPresentation;
+DELETE FROM ProvieRequirements;
+DELETE FROM Debate;
+DELETE FROM HumorousDebate;
+DELETE FROM SeriousDebate;
+DELETE FROM MemberHumorousDebate;
+DELETE FROM MemberSeriousDebate;
+DELETE FROM Officers;
+DELETE FROM ProvisionalMember;
 
 INSERT INTO Member (computingID, firstName, lastName, provieSemester)
 VALUES ('MGS4XM', 'Liberty', 'Vanty', 'Spring 2022');
