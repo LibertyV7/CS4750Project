@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="washsoc@localhost" uuid="fabba551-021b-4f2f-a82a-42d698847595">
+    <data-source source="LOCAL" name="washsocFinal@localhost" uuid="fabba551-021b-4f2f-a82a-42d698847595">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/washsoc</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/washsocFinal</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="WashingtonSociety@localhost" uuid="c002dc7a-7ead-4997-8739-e5bb9ae32356">
+    <data-source source="LOCAL" name="Washington@localhost" uuid="c002dc7a-7ead-4997-8739-e5bb9ae32356">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/WashingtonSociety</jdbc-url>
+      <jdbc-url>jdbc:mysql://localhost:3306/Washington</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

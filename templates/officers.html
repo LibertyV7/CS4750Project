@@ -76,7 +76,7 @@
         <a href="/">Home</a>
         <a href="/members">Members</a>
         <a href="/provisional-members">Provisional Members</a>
-        <a href="/requirements">Requirements</a>
+        <a href="/requirements">Provie Hub</a>
         <a href="/debates">Debates</a>
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
@@ -142,8 +142,11 @@
         <thead>
             <tr>
                 <th>Officer ID</th>
-                <th>Member ID</th>
-                <th>Position </th>
+                <th>Computing ID</th>
+                <th>Position</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+
             </tr>
         </thead>
         <tbody>
@@ -152,6 +155,8 @@
                     <td>{{ officer[0]}}</td>
                     <td>{{ officer[1]}}</td>
                     <td>{{ officer[2]}}</td>
+                    <td>{{ officer[3]}}</td>
+                    <td>{{ officer[4]}}</td>
                 </tr>
             {% endfor %}
         </tbody>
