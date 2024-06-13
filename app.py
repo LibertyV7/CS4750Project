@@ -4,11 +4,11 @@ import mysql.connector
 app = Flask(__name__)
 
 db_config = {
-    'user': 'root',
-    'password': '',
-    'host': 'localhost',
+    'user': 'admin',
+    'password': 'w4shington',
+    'host': 'washsoc.cng8gg0savul.us-east-1.rds.amazonaws.com',
     'port': 3306,
-    'database': 'washsocFinal'
+    'database': 'washsoc'
 }
 def get_db_connection():
     conn = mysql.connector.connect(**db_config)
@@ -32,7 +32,7 @@ def members():  # put application's code here
         'duesPaid': request.args.get('duesPaid')
     }
     sort = request.args.get('sort')
-    query = "SELECT * FROM member WHERE 1=1"
+    query = "SELECT * FROM Member WHERE 1=1"
     params = []
 
     for key, value in filters.items():
@@ -219,61 +219,6 @@ def officers():
     cursor.close()
     conn.close()
     return render_template('officers.html', officers=officers)
-
-@app.route('/events', methods=['GET'])
-def events():
-    # Get the date from the query parameters
-    event_date = request.args.get('date')
-
-    # Construct the query
-    query = """
-    SELECT 
-        IFNULL(D.debateDate, L.presentationDate) AS eventDate,
-        L.title AS presentationTitle,
-        D.resolution AS debateResolution,
-        D.debateType AS debateType
-    FROM 
-        Debate D
-    LEFT JOIN 
-        LiteraryPresentation L
-    ON 
-        D.debateDate = L.presentationDate
-    WHERE 
-        IFNULL(D.debateDate, L.presentationDate) = %s
-
-    UNION
-
-    SELECT 
-        IFNULL(D.debateDate, L.presentationDate) AS eventDate,
-        L.title AS presentationTitle,
-        D.resolution AS debateResolution,
-        D.debateType AS debateType
-    FROM 
-        Debate D
-    RIGHT JOIN 
-        LiteraryPresentation L
-    ON 
-        D.debateDate = L.presentationDate
-    WHERE 
-        IFNULL(D.debateDate, L.presentationDaHumorousDebatete) = %s
-    """
-
-    # Connect to the database
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    # Execute the query with the user input date
-    cursor.execute(query, (event_date, event_date))  # Provide event_date twice
-
-    # Fetch all results
-    events = cursor.fetchall()
-
-    # Close the cursor and connection
-    cursor.close()
-    conn.close()
-
-    # Render the template with events and event_date
-    return render_template('events.html', events=events, event_date=event_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
