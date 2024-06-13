@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation styles */
+        nav {
+            background-color: #960001;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #b40b0c;
+        }
+
+        /* Form and table styles */
+        form {
+            margin: 20px 0;
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input {
+            width: 150px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/members">Members</a>
+        <a href="/provisional-members">Provisional Members</a>
+        <a href="/requirements">Provie Hub</a>
+        <a href="/debates">Debates</a>
+        <a href="/literary-presentations">Literary Presentations</a>
+        <a href="/officers">Officers</a>
+    </nav>
+    <h1>Events</h1>
+
+    <form method="GET" action="/events">
+        <div class="input-section">
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date" required>
+        </div>
+        <button type="submit">Filter by Date</button>
+    </form>
+
+    <div id="result-container">
+        {% if events %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Presentation Title</th>
+                    <th>Debate Resolution</th>
+                    <th>Debate Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>{{ event[0] }}</td>
+                        <td>{{ event[1] }}</td>
+                        <td>{{ event[2] }}</td>
+                        <td>{{ event[3] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No events found for the selected date.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
