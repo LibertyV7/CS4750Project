@@ -4,11 +4,11 @@ import mysql.connector
 app = Flask(__name__)
 
 db_config = {
-    'user': 'root',
-    'password': '',
-    'host': 'localhost',
+    'user': 'admin',
+    'password': 'w4shington',
+    'host': 'washsoc.cng8gg0savul.us-east-1.rds.amazonaws.com',
     'port': 3306,
-    'database': ''
+    'database': 'washsoc'
 }
 def get_db_connection():
     conn = mysql.connector.connect(**db_config)
@@ -32,7 +32,7 @@ def members():  # put application's code here
         'duesPaid': request.args.get('duesPaid')
     }
     sort = request.args.get('sort')
-    query = "SELECT * FROM member WHERE 1=1"
+    query = "SELECT * FROM Member WHERE 1=1"
     params = []
 
     for key, value in filters.items():
