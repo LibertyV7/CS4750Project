@@ -5,20 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Literary Presentation List</title>
     <style>
-        table {
-            width: 50%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 18px;
-            text-align: left;
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+
+        /* Navigation styles */
         nav {
             background-color: #960001;
             overflow: hidden;
@@ -33,7 +27,47 @@
         }
         nav a:hover {
             background-color: #b40b0c;
-            color: black;
+        }
+
+        /* Form and table styles */
+        form {
+            margin: 20px 0;
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input,
+        .input-section select {
+            width: 150px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -48,12 +82,49 @@
         <a href="/officers">Officers</a>
     </nav>
     <h1>Literary Presentation List</h1>
-    <table>
+
+    <form method="GET" action="/members">
+        <div class="input-section">
+            <label for="date">Date:</label>
+            <input type="text" name="date" id="date" placeholder="Search">
+            <label for="computingID">Computing ID:</label>
+            <input type="text" name="computingID" id="computingID" placeholder="Search">
+            <label for="firstName">First Name:</label>
+            <input type="text" name="firstName" id="firstName" placeholder="Search">
+        </div>
+        <div class="input-section">
+            <label for="lastName">Last Name:</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Search">
+            <label for="title">Title:</label>
+            <input type="text" name="title" id="title" placeholder="Search">
+            <label for="author">Author:</label>
+            <input type="text" name="author" id="author" placeholder="Search">
+        </div>
+
+
+        <div class="input-section">
+            <label for="sort-select">Sort By:</label>
+            <select name="sort" id="sort">
+                <option value="computingID">Computing ID</option>
+                <option value="firstName">First Name</option>
+                <option value="lastName">Last Name</option>
+                <option value="memType">Member Type</option>
+                <option value="provieSemester">Provie Semester</option>
+                <option value="duesPaid">Dues Paid</option>
+            </select>
+        </div>
+
+        <button type="submit">Filter and Sort</button>
+    </form>
+
+    <div id="result-container">
+        <table>
         <thead>
             <tr>
-                <th>Literary Presentation ID</th>
                 <th>Date</th>
-                <th>Member ID </th>
+                <th>Computing ID </th>
+                <th>First Name</th>
+                <th>Last Name</th>
                 <th>Title</th>
                 <th>Author</th>
             </tr>
@@ -61,14 +132,16 @@
         <tbody>
             {% for presentation in literarypresentations %}
                 <tr>
-                    <td>{{ presentation[0]}}</td>
                     <td>{{ presentation[1]}}</td>
                     <td>{{ presentation[2]}}</td>
+                    <td>{{ presentation[5]}}</td>
+                    <td>{{ presentation[6] }}</td>
                     <td>{{ presentation[3]}}</td>
                     <td>{{ presentation[4]}}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </body>
 </html>

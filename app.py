@@ -200,9 +200,10 @@ def debates():
 
 @app.route('/literary-presentations')
 def literary_presentations():
+    query = "SELECT lp.*, m.firstName, m.lastName FROM literarypresentation lp JOIN member m ON lp.computingID = m.computingID WHERE 1 = 1"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from literarypresentation')
+    cursor.execute(query)
     literarypresentations = cursor.fetchall()
     cursor.close()
     conn.close()

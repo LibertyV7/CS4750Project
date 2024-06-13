@@ -5,20 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Debate List</title>
     <style>
-        table {
-            width: 50%;
-            border-collapse: collapse;
-            margin: 25px 0;
-            font-size: 18px;
-            text-align: left;
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
         }
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+
+        /* Navigation styles */
         nav {
             background-color: #960001;
             overflow: hidden;
@@ -33,7 +27,47 @@
         }
         nav a:hover {
             background-color: #b40b0c;
-            color: black;
+        }
+
+        /* Form and table styles */
+        form {
+            margin: 20px 0;
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input,
+        .input-section select {
+            width: 150px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -48,7 +82,63 @@
         <a href="/officers">Officers</a>
     </nav>
     <h1>Debate List</h1>
-    <table>
+
+    <form method="GET" action="/members">
+        <div class="input-section">
+            <label for="id">Computing ID:</label>
+            <input type="text" name="id" id="id" placeholder="Search">
+            <label for="firstName">First Name:</label>
+            <input type="text" name="firstName" id="firstName" placeholder="Search">
+            <label for="lastName">Last Name:</label>
+            <input type="text" name="lastName" id="lastName" placeholder="Search">
+        </div>
+
+        <div class="input-section">
+            <label for="memberType">Member Type:</label>
+            <select name="memberType" id="memberType">
+                <option value="select">Select One</option>
+                <option value="member">Member</option>
+                <option value="provie">Provie</option>
+                <option value="officer">Officer</option>
+            </select>
+            <label for="provieSemester">Provie Semester:</label>
+            <select name="provieSemester" id="provieSemester">
+                <option value="select">Select One</option>
+                <option value="Spring 2021">Spring 2021</option>
+                <option value="Fall 2021">Fall 2021</option>
+                <option value="Spring 2022">Spring 2022</option>
+                <option value="Fall 2022">Fall 2022</option>
+                <option value="Spring 2023">Spring 2023</option>
+                <option value="Fall 2023">Fall 2023</option>
+                <option value="Spring 2024">Spring 2024</option>
+                <option value="Fall 2024">Fall 2024</option>
+            </select>
+            <label for="duesPaid">Dues Paid:</label>
+            <select name="duesPaid" id="duesPaid">
+                <option value="select">Select One</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Not Paid</option>
+            </select>
+
+        </div>
+
+        <div class="input-section">
+            <label for="sort-select">Sort By:</label>
+            <select name="sort" id="sort">
+                <option value="computingID">Computing ID</option>
+                <option value="firstName">First Name</option>
+                <option value="lastName">Last Name</option>
+                <option value="memType">Member Type</option>
+                <option value="provieSemester">Provie Semester</option>
+                <option value="duesPaid">Dues Paid</option>
+            </select>
+        </div>
+
+        <button type="submit">Filter and Sort</button>
+    </form>
+
+    <div id="result-container">
+        <table>
         <thead>
             <tr>
                 <th>Debate ID</th>
@@ -80,5 +170,6 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </body>
 </html>
