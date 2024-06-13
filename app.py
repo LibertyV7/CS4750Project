@@ -4,11 +4,11 @@ import mysql.connector
 app = Flask(__name__)
 
 db_config = {
-    'user': 'sqm8uk',
-    'password': 'ponyo123',
+    'user': 'root',
+    'password': '',
     'host': 'localhost',
     'port': 3306,
-    'database': 'WashingtonSociety'
+    'database': ''
 }
 def get_db_connection():
     conn = mysql.connector.connect(**db_config)
@@ -74,7 +74,8 @@ def provisional_members():
         'completed': request.args.get('completed')
     }
     sort = request.args.get('sort')
-    query = "SELECT pm.*, m.firstName, m.lastName FROM provisionalmember pm JOIN member m ON pm.computingID = m.computingID WHERE 1 = 1"
+    query = ("SELECT pm.*, m.firstName, m.lastName FROM ProvisionalMember pm JOIN Member m ON pm.computingID ="
+             " m.computingID WHERE 1 = 1")
     params = []
     for key,value in filters.items():
         if value:
@@ -108,9 +109,9 @@ def requirements():
     sort = request.args.get('sort')
     query = """
         SELECT pr.*, m.firstName, m.lastName, m.computingID, m.duesPaid 
-        FROM provierequirements pr
-        JOIN provisionalmember pm ON pr.provID = pm.provID
-        JOIN member m ON pm.computingID = m.computingID
+        FROM ProvieRequirements pr
+        JOIN ProvisionalMember pm ON pr.provID = pm.provID
+        JOIN Member m ON pm.computingID = m.computingID
     """
     params = []
     for key,value in filter.items():
@@ -150,7 +151,7 @@ def edit_requirements():
         # Fetch current state to determine what was unchecked
         query = """
             SELECT provID, completed, attendance, fullMeeting, historyTour, majorService, minorService, debate, literaryPresentation
-            FROM provierequirements
+            FROM ProvieRequirements
         """
         cursor.execute(query)
         current_state = cursor.fetchall()
@@ -174,9 +175,9 @@ def edit_requirements():
     # Fetch data for display
     query = """
         SELECT pr.*, m.firstName, m.lastName, m.computingID, m.duesPaid 
-        FROM provierequirements pr
-        JOIN provisionalmember pm ON pr.provID = pm.provID
-        JOIN member m ON pm.computingID = m.computingID
+        FROM ProvieRequirements pr
+        JOIN ProvisionalMember pm ON pr.provID = pm.provID
+        JOIN Member m ON pm.computingID = m.computingID
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -213,7 +214,7 @@ def literary_presentations():
 def officers():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from officers')
+    cursor.execute("""SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN member m ON o.computingID = m.computingID WHERE 1 = 1""");
     officers = cursor.fetchall()
     cursor.close()
     conn.close()
