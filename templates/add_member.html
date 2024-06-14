@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Member</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Form styles */
+        form {
+            width: 50%;
+            margin: auto;
+            margin-top: 50px;
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input,
+        .input-section select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #b40b0c;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST" action="/add_member">
+        <div class="input-section">
+            <label for="computing_id">Computing ID:</label>
+            <input type="text" id="computing_id" name="computing_id" required>
+        </div>
+        <div class="input-section">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" required>
+        </div>
+        <div class="input-section">
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" required>
+        </div>
+        <div class="input-section">
+            <label for="mem_type">Member Type:</label>
+            <select id="mem_type" name="mem_type" required>
+                <option value="member">Member</option>
+                <option value="provie">Provie</option>
+                <option value="officer">Officer</option>
+            </select>
+        </div>
+        <div class="input-section">
+            <label for="provie_semester">Provie Semester:</label>
+            <input type="text" id="provie_semester" name="provie_semester" required>
+        </div>
+        <div class="input-section">
+            <label for="dues_paid">Dues Paid:</label>
+            <input type="checkbox" id="dues_paid" name="dues_paid" value="1">
+        </div>
+        <button type="submit">Add Member</button>
+    </form>
+</body>
+</html>

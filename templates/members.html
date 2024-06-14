@@ -29,45 +29,52 @@
             background-color: #b40b0c;
         }
 
-        /* Form and table styles */
-        form {
-            margin: 20px 0;
-        }
-        .input-section {
-            margin-bottom: 10px;
-        }
-        .input-section label {
-            margin-right: 10px;
-        }
-        .input-section input,
-        .input-section select {
-            width: 150px;
-        }
-        button[type="submit"] {
-            padding: 10px 20px;
-            background-color: #960001;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button[type="submit"]:hover {
-            background-color: #b40b0c;
-        }
+        /* Table styles */
         table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            text-align: center;
+            border-collapse: collapse;
             margin-top: 20px;
             font-size: 16px;
         }
         th, td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            text-align: left;
         }
         th {
             background-color: #f2f2f2;
+        }
+        td button {
+            padding: 6px 10px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        td button:hover {
+            background-color: #b40b0c;
+        }
+        .add-delete-section {
+            margin-top: 20px;
+        }
+        .add-delete-section input {
+            padding: 6px 10px;
+            margin-right: 10px;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-delete-section button {
+            padding: 6px 10px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-delete-section button:hover {
+            background-color: #b40b0c;
         }
     </style>
 </head>
@@ -75,7 +82,7 @@
     <nav>
         <a href="/">Home</a>
         <a href="/members">Members</a>
-        <a href="/provisional-members">Provisional Members</a>
+        <a href="/events">Schedule</a>
         <a href="/requirements">Provie Hub</a>
         <a href="/debates">Debates</a>
         <a href="/literary-presentations">Literary Presentations</a>
@@ -83,85 +90,40 @@
     </nav>
     <h1>Member List</h1>
 
-    <form method="GET" action="/members">
-        <div class="input-section">
-            <label for="id">Computing ID:</label>
-            <input type="text" name="id" id="id" placeholder="Search">
-            <label for="firstName">First Name:</label>
-            <input type="text" name="firstName" id="firstName" placeholder="Search">
-            <label for="lastName">Last Name:</label>
-            <input type="text" name="lastName" id="lastName" placeholder="Search">
-        </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Computing ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Provie Semester</th>
+                <th>Dues Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>{{ member[0] }}</td>
+                <td>{{ member[1] }}</td>
+                <td>{{ member[2] }}</td>
+                <td>{{ member[3] }}</td>
+                <td>{% if member[4] == 1 %} Paid {% else %} Unpaid {% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-        <div class="input-section">
-            <label for="memberType">Member Type:</label>
-            <select name="memberType" id="memberType">
-                <option value="select">Select One</option>
-                <option value="member">Member</option>
-                <option value="provie">Provie</option>
-                <option value="officer">Officer</option>
-            </select>
-            <label for="provieSemester">Provie Semester:</label>
-            <select name="provieSemester" id="provieSemester">
-                <option value="select">Select One</option>
-                <option value="Spring 2021">Spring 2021</option>
-                <option value="Fall 2021">Fall 2021</option>
-                <option value="Spring 2022">Spring 2022</option>
-                <option value="Fall 2022">Fall 2022</option>
-                <option value="Spring 2023">Spring 2023</option>
-                <option value="Fall 2023">Fall 2023</option>
-                <option value="Spring 2024">Spring 2024</option>
-                <option value="Fall 2024">Fall 2024</option>
-            </select>
-            <label for="duesPaid">Dues Paid:</label>
-            <select name="duesPaid" id="duesPaid">
-                <option value="select">Select One</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Not Paid</option>
-            </select>
+     <div class="add-delete-section">
+        <form action="/add_member">
+            <button type="submit">Add Member</button>
+        </form>
 
-        </div>
-
-        <div class="input-section">
-            <label for="sort-select">Sort By:</label>
-            <select name="sort" id="sort">
-                <option value="computingID">Computing ID</option>
-                <option value="firstName">First Name</option>
-                <option value="lastName">Last Name</option>
-                <option value="memType">Member Type</option>
-                <option value="provieSemester">Provie Semester</option>
-                <option value="duesPaid">Dues Paid</option>
-            </select>
-        </div>
-
-        <button type="submit">Filter and Sort</button>
-    </form>
-
-    <div id="result-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Computing ID</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Member Type</th>
-                    <th>Provie Semester</th>
-                    <th>Dues Paid</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                    <tr>
-                        <td>{{ member[0] }}</td>
-                        <td>{{ member[1] }}</td>
-                        <td>{{ member[2] }}</td>
-                        <td>{{ member[3] }}</td>
-                        <td>{{ member[4] }}</td>
-                        <td>{{ member[5] | status_to_check }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <form action="/delete_member" method="post" onsubmit="return confirm('Are you sure you want to delete this member?');">
+            <label for="delete_computing_id">Enter Computing ID to Delete:</label>
+            <input type="text" id="delete_computing_id" name="computing_id" required>
+            <button type="submit">Delete Member</button>
+        </form>
     </div>
 </body>
 </html>
+

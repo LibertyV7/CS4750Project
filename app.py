@@ -20,24 +20,22 @@ def index():
 @app.template_filter('status_to_check')
 def status_to_check(value):
     return '✔️' if value else '❌'
-
 @app.route('/members')
-def members():  # put application's code here
+def members():
     filters = {
         'computingID': request.args.get('id'),
         'firstName': request.args.get('firstName'),
         'lastName': request.args.get('lastName'),
-        'memType': request.args.get('memberType'),
         'provieSemester': request.args.get('provieSemester'),
         'duesPaid': request.args.get('duesPaid')
     }
     sort = request.args.get('sort')
-    query = "SELECT * FROM Member WHERE 1=1"
+    query = "SELECT computingID, firstName, lastName, provieSemester, duesPaid FROM Member WHERE 1=1"
     params = []
 
     for key, value in filters.items():
         if value:
-            if key == 'memType' or key == 'provieSemester':
+            if key == 'provieSemester':
                 if value != 'select':
                     query += f" AND {key} LIKE %s"
                     params.append(f"{value}%")
@@ -52,18 +50,49 @@ def members():  # put application's code here
     if sort:
         query += f" ORDER BY {sort}"
 
-
-    print(query)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(query, params)
     members = cursor.fetchall()
-    print(members)
     cursor.close()
     conn.close()
+
     return render_template('members.html', members=members)
 
+@app.route('/add_member', methods=['GET', 'POST'])
+def add_member():
+    if request.method == 'POST':
+        computing_id = request.form['computing_id']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        mem_type = request.form['mem_type']
+        provie_semester = request.form['provie_semester']
+        dues_paid = request.form.get('dues_paid', '0')
 
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO Member (computingID, firstName, lastName, memType, provieSemester, duesPaid) VALUES (%s, %s, %s, %s, %s, %s)',
+                       (computing_id, first_name, last_name, mem_type, provie_semester, dues_paid))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for('members'))
+
+    return render_template('add_member.html')
+
+@app.route('/delete_member', methods=['POST'])
+def delete_member():
+    computing_id = request.form['computing_id']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM Member WHERE computingID = %s', (computing_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('members'))
 
 @app.route('/provisional-members')
 def provisional_members():
