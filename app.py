@@ -10,16 +10,23 @@ db_config = {
     'port': 3306,
     'database': 'washsoc'
 }
+
+
 def get_db_connection():
     conn = mysql.connector.connect(**db_config)
     return conn
+
+
 @app.route('/')
 def index():
     return render_template('home.html')
 
+
 @app.template_filter('status_to_check')
 def status_to_check(value):
     return '✔️' if value else '❌'
+
+
 @app.route('/members')
 def members():
     filters = {
@@ -59,6 +66,7 @@ def members():
 
     return render_template('members.html', members=members)
 
+
 @app.route('/add_member', methods=['GET', 'POST'])
 def add_member():
     if request.method == 'POST':
@@ -71,8 +79,9 @@ def add_member():
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO Member (computingID, firstName, lastName, memType, provieSemester, duesPaid) VALUES (%s, %s, %s, %s, %s, %s)',
-                       (computing_id, first_name, last_name, mem_type, provie_semester, dues_paid))
+        cursor.execute(
+            'INSERT INTO Member (computingID, firstName, lastName, memType, provieSemester, duesPaid) VALUES (%s, %s, %s, %s, %s, %s)',
+            (computing_id, first_name, last_name, mem_type, provie_semester, dues_paid))
         conn.commit()
         cursor.close()
         conn.close()
@@ -80,6 +89,7 @@ def add_member():
         return redirect(url_for('members'))
 
     return render_template('add_member.html')
+
 
 @app.route('/delete_member', methods=['POST'])
 def delete_member():
@@ -94,6 +104,7 @@ def delete_member():
 
     return redirect(url_for('members'))
 
+
 @app.route('/provisional-members')
 def provisional_members():
     filters = {
@@ -106,7 +117,7 @@ def provisional_members():
     query = ("SELECT pm.*, m.firstName, m.lastName FROM ProvisionalMember pm JOIN Member m ON pm.computingID ="
              " m.computingID WHERE 1 = 1")
     params = []
-    for key,value in filters.items():
+    for key, value in filters.items():
         if value:
             if key == 'completed':
                 if value == 'completed':
@@ -128,6 +139,7 @@ def provisional_members():
     conn.close()
     return render_template('provisional-member.html', provisionalmembers=provisionalmembers)
 
+
 @app.route('/requirements')
 def requirements():
     filter = {
@@ -143,7 +155,7 @@ def requirements():
         JOIN Member m ON pm.computingID = m.computingID
     """
     params = []
-    for key,value in filter.items():
+    for key, value in filter.items():
         if value:
             query += f" AND {key} LIKE %s"
             params.append(f"{value}%")
@@ -157,6 +169,7 @@ def requirements():
     print(provierequirements)
     conn.close()
     return render_template('requirements.html', provierequirements=provierequirements)
+
 
 @app.route('/edit_requirements', methods=['GET', 'POST'])
 def edit_requirements():
@@ -228,6 +241,7 @@ def debates():
     conn.close()
     return render_template('debates.html', debates=debates)
 
+
 @app.route('/add_debate', methods=['POST'])
 def add_debate():
     # Extract form data
@@ -252,6 +266,7 @@ def add_debate():
 
     return redirect(url_for('debates'))
 
+
 @app.route('/update_debate_votes', methods=['POST'])
 def update_debate_votes():
     # Extract form data
@@ -266,15 +281,15 @@ def update_debate_votes():
     # Update debate votes in database
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('UPDATE Debate SET qualityGovernment = %s, qualityOpposition = %s, sentimentGovernment = %s, sentimentOpposition = %s, qualityOverall = %s, sentimentOverall = %s WHERE debateID = %s',
-                   (quality_government, quality_opposition, sentiment_government, sentiment_opposition, quality_overall, sentiment_overall, debate_id))
+    cursor.execute(
+        'UPDATE Debate SET qualityGovernment = %s, qualityOpposition = %s, sentimentGovernment = %s, sentimentOpposition = %s, qualityOverall = %s, sentimentOverall = %s WHERE debateID = %s',
+        (quality_government, quality_opposition, sentiment_government, sentiment_opposition, quality_overall,
+         sentiment_overall, debate_id))
     conn.commit()
     cursor.close()
     conn.close()
 
     return redirect(url_for('debates'))
-
-
 
 
 @app.route('/delete_debate', methods=['POST'])
@@ -290,8 +305,6 @@ def delete_debate():
 
     return redirect(url_for('debates'))
 
-
-
 @app.route('/literary-presentations')
 def literary_presentations():
     query = "SELECT lp.*, m.firstName, m.lastName FROM LiteraryPresentation lp JOIN Member m ON lp.computingID = m.computingID WHERE 1 = 1"
@@ -303,15 +316,18 @@ def literary_presentations():
     conn.close()
     return render_template('literary_presentations.html', literarypresentations=literarypresentations)
 
+
 @app.route('/officers')
 def officers():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN Member m ON o.computingID = m.computingID WHERE 1 = 1""");
+    cursor.execute(
+        """SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN Member m ON o.computingID = m.computingID WHERE 1 = 1""");
     officers = cursor.fetchall()
     cursor.close()
     conn.close()
     return render_template('officers.html', officers=officers)
+
 
 @app.route('/events', methods=['GET'])
 def events():
@@ -423,9 +439,11 @@ def events():
     return render_template('events.html', humorous_debates=humorous_debates, serious_debates=serious_debates,
                            presentations=presentations, event_date=event_date)
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS washsoc;
+
 DROP TABLE IF EXISTS MemberHumorousDebate;
 DROP TABLE IF EXISTS MemberSeriousDebate;
 DROP TABLE IF EXISTS HumorousDebate;
