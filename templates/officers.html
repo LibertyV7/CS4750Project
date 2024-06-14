@@ -92,7 +92,7 @@
 
     <div class="form-container">
         <h2>Filter and Search:</h2>
-    <form method="GET" action="/members">
+    <form method="GET" action="/officers">
         <div class="input-section">
             <label for="id">Computing ID:</label>
             <input type="text" name="id" id="id" placeholder="Search">
@@ -103,43 +103,19 @@
         </div>
 
         <div class="input-section">
-            <label for="memberType">Member Type:</label>
-            <select name="memberType" id="memberType">
-                <option value="select">Select One</option>
-                <option value="member">Member</option>
-                <option value="provie">Provie</option>
-                <option value="officer">Officer</option>
-            </select>
-            <label for="provieSemester">Provie Semester:</label>
-            <select name="provieSemester" id="provieSemester">
-                <option value="select">Select One</option>
-                <option value="Spring 2021">Spring 2021</option>
-                <option value="Fall 2021">Fall 2021</option>
-                <option value="Spring 2022">Spring 2022</option>
-                <option value="Fall 2022">Fall 2022</option>
-                <option value="Spring 2023">Spring 2023</option>
-                <option value="Fall 2023">Fall 2023</option>
-                <option value="Spring 2024">Spring 2024</option>
-                <option value="Fall 2024">Fall 2024</option>
-            </select>
-            <label for="duesPaid">Dues Paid:</label>
-            <select name="duesPaid" id="duesPaid">
-                <option value="select">Select One</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Not Paid</option>
-            </select>
+            <label for="position">Position:</label>
+            <input type="text" name="position" id="position" placeholder="Search">
 
         </div>
 
         <div class="input-section">
             <label for="sort-select">Sort By:</label>
             <select name="sort" id="sort">
-                <option value="computingID">Computing ID</option>
-                <option value="firstName">First Name</option>
-                <option value="lastName">Last Name</option>
-                <option value="memType">Member Type</option>
-                <option value="provieSemester">Provie Semester</option>
-                <option value="duesPaid">Dues Paid</option>
+                <option value="officerID">Officer ID</option>
+                <option value="o.computingID">Computing ID</option>
+                <option value="m.firstName">First Name</option>
+                <option value="m.lastName">Last Name</option>
+                <option value="position">Position</option>
             </select>
         </div>
 
@@ -153,9 +129,9 @@
             <tr>
                 <th>Officer ID</th>
                 <th>Computing ID</th>
-                <th>Position</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Position</th>
 
             </tr>
         </thead>
@@ -164,9 +140,9 @@
                 <tr>
                     <td>{{ officer[0]}}</td>
                     <td>{{ officer[1]}}</td>
-                    <td>{{ officer[2]}}</td>
                     <td>{{ officer[3]}}</td>
                     <td>{{ officer[4]}}</td>
+                    <td>{{ officer[2]}}</td>
                 </tr>
             {% endfor %}
         </tbody>

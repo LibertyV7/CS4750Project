@@ -110,10 +110,10 @@
 
     <div class="form-container">
         <h2>Filter and Search:</h2>
-    <form method="GET" action="/members">
+    <form method="GET" action="/literary-presentations">
         <div class="input-section">
             <label for="date">Date:</label>
-            <input type="text" name="date" id="date" placeholder="Search">
+            <input type="date" name="date" id="date" placeholder="YYYY-MM-DD">
             <label for="computingID">Computing ID:</label>
             <input type="text" name="computingID" id="computingID" placeholder="Search">
             <label for="firstName">First Name:</label>
@@ -131,12 +131,13 @@
         <div class="input-section">
             <label for="sort-select">Sort By:</label>
             <select name="sort" id="sort">
-                <option value="computingID">Computing ID</option>
-                <option value="firstName">First Name</option>
-                <option value="lastName">Last Name</option>
-                <option value="memType">Member Type</option>
-                <option value="provieSemester">Provie Semester</option>
-                <option value="duesPaid">Dues Paid</option>
+                <option value="literaryPresentationID">Literary Presentation ID</option>
+                <option value="presentationDate">Date</option>
+                <option value="m.computingID">Computing ID</option>
+                <option value="m.firstName">First Name</option>
+                <option value="m.lastName">Last Name</option>
+                <option value="title">Title</option>
+                <option value="author">Author</option>
             </select>
         </div>
 
@@ -148,6 +149,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>Literary Presentation ID</th>
                     <th>Date</th>
                     <th>Computing ID</th>
                     <th>First Name</th>
@@ -159,6 +161,7 @@
             <tbody>
                 {% for presentation in literarypresentations %}
                     <tr>
+                        <td>{{ presentation[0] }}</td>
                         <td>{{ presentation[1] }}</td>
                         <td>{{ presentation[2] }}</td>
                         <td>{{ presentation[5] }}</td>

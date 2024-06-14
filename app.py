@@ -459,10 +459,27 @@ def add_members_to_humorous_debate():
 
 @app.route('/literary-presentations')
 def literary_presentations():
+    filter = {
+        'presentationDate': request.args.get('date'),
+        'm.computingID': request.args.get('computingID'),
+        'm.firstName': request.args.get('firstName'),
+        'm.lastName': request.args.get('lastName'),
+        'title' : request.args.get('title'),
+        'author': request.args.get('author')
+    }
+    sort = request.args.get('sort')
     query = "SELECT lp.*, m.firstName, m.lastName FROM LiteraryPresentation lp JOIN Member m ON lp.computingID = m.computingID WHERE 1 = 1"
+    params = []
+    for key, value in filter.items():
+        if value:
+            query += f" AND {key} LIKE %s"
+            params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
+    print(query, params)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(query)
+    cursor.execute(query, params)
     literarypresentations = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -506,10 +523,24 @@ def update_literary_presentation():
 
 @app.route('/officers')
 def officers():
+    filter = {
+        'o.computingID': request.args.get('id'),
+        'm.firstName': request.args.get('firstName'),
+        'm.lastName': request.args.get('lastName'),
+        'position': request.args.get('position')
+    }
+    sort = request.args.get('sort')
+    query = """SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN Member m ON o.computingID = m.computingID WHERE 1 = 1"""
+    params = []
+    for key, value in filter.items():
+        if value:
+            query += f" AND {key} LIKE %s"
+            params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        """SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN Member m ON o.computingID = m.computingID WHERE 1 = 1""");
+    cursor.execute(query, params)
     officers = cursor.fetchall()
     cursor.close()
     conn.close()
