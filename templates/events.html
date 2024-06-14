@@ -90,29 +90,75 @@
         <button type="submit">Filter by Date</button>
     </form>
 
-    <div id="debates-container">
-        {% if debates %}
-        <h2>Debates</h2>
+    <div id="humorous-debates-container">
+        {% if humorous_debates %}
+        <h2>Humorous Debates</h2>
         <table>
             <thead>
                 <tr>
                     <th>Date</th>
                     <th>Resolution</th>
                     <th>Type</th>
+                    <th>Governor 1</th>
+                    <th>Governor 2</th>
+                    <th>Governor 3</th>
+                    <th>Opposition 1</th>
+                    <th>Opposition 2</th>
+                    <th>Opposition 3</th>
                 </tr>
             </thead>
             <tbody>
-                {% for debate in debates %}
+                {% for debate in humorous_debates %}
                     <tr>
                         <td>{{ debate[0] }}</td>
                         <td>{{ debate[1] }}</td>
                         <td>{{ debate[2] }}</td>
+                        <td>{{ debate[3] }} {{ debate[4] }}</td>
+                        <td>{{ debate[5] }} {{ debate[6] }}</td>
+                        <td>{{ debate[7] }} {{ debate[8] }}</td>
+                        <td>{{ debate[9] }} {{ debate[10] }}</td>
+                        <td>{{ debate[11] }} {{ debate[12] }}</td>
+                        <td>{{ debate[13] }} {{ debate[14] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p>No debates found for the selected date.</p>
+        <p>No humorous debates found for the selected date.</p>
+        {% endif %}
+    </div>
+
+    <div id="serious-debates-container">
+        {% if serious_debates %}
+        <h2>Serious Debates</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Resolution</th>
+                    <th>Type</th>
+                    <th>Minister of Government</th>
+                    <th>Member of Government</th>
+                    <th>Leader of Opposition</th>
+                    <th>Member of Opposition</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for debate in serious_debates %}
+                    <tr>
+                        <td>{{ debate[0] }}</td>
+                        <td>{{ debate[1] }}</td>
+                        <td>{{ debate[2] }}</td>
+                        <td>{{ debate[3] }} {{ debate[4] }}</td>
+                        <td>{{ debate[5] }} {{ debate[6] }}</td>
+                        <td>{{ debate[7] }} {{ debate[8] }}</td>
+                        <td>{{ debate[9] }} {{ debate[10] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No serious debates found for the selected date.</p>
         {% endif %}
     </div>
 

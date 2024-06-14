@@ -222,21 +222,71 @@ def officers():
 
 @app.route('/events', methods=['GET'])
 def events():
-    # Get the date from the query parametersgit
+    # Get the date from the query parameters
     event_date = request.args.get('date')
 
-    # Construct the query to fetch debates
-    debate_query = """
+    # Construct the query to fetch humorous debates with debaters' names
+    humorous_query = """
     SELECT 
-        debateDate AS eventDate,
-        resolution AS debateResolution,
-        debateType AS debateType,
+        d.debateDate AS eventDate,
+        d.resolution AS debateResolution,
+        'Humorous' AS debateType,
+        m1.firstName AS gov1FirstName, m1.lastName AS gov1LastName,
+        m2.firstName AS gov2FirstName, m2.lastName AS gov2LastName,
+        m3.firstName AS gov3FirstName, m3.lastName AS gov3LastName,
+        m4.firstName AS opp1FirstName, m4.lastName AS opp1LastName,
+        m5.firstName AS opp2FirstName, m5.lastName AS opp2LastName,
+        m6.firstName AS opp3FirstName, m6.lastName AS opp3LastName,
         NULL AS presentationTitle,
         NULL AS presenterName
     FROM 
-        Debate
+        Debate d
+    JOIN 
+        HumorousDebate hd ON d.debateID = hd.debateID
+    LEFT JOIN 
+        Member m1 ON hd.computingID_gov1 = m1.computingID
+    LEFT JOIN 
+        Member m2 ON hd.computingID_gov2 = m2.computingID
+    LEFT JOIN 
+        Member m3 ON hd.computingID_gov3 = m3.computingID
+    LEFT JOIN 
+        Member m4 ON hd.computingID_opp1 = m4.computingID
+    LEFT JOIN 
+        Member m5 ON hd.computingID_opp2 = m5.computingID
+    LEFT JOIN 
+        Member m6 ON hd.computingID_opp3 = m6.computingID
     WHERE 
-        debateDate = %s
+        d.debateDate = %s
+        AND d.debateType = 'Humorous'
+    """
+
+    # Construct the query to fetch serious debates with debaters' names
+    serious_query = """
+    SELECT 
+        d.debateDate AS eventDate,
+        d.resolution AS debateResolution,
+        'Serious' AS debateType,
+        m1.firstName AS ministerFirstName, m1.lastName AS ministerLastName,
+        m2.firstName AS member1FirstName, m2.lastName AS member1LastName,
+        m3.firstName AS leaderFirstName, m3.lastName AS leaderLastName,
+        m4.firstName AS member2FirstName, m4.lastName AS member2LastName,
+        NULL AS presentationTitle,
+        NULL AS presenterName
+    FROM 
+        Debate d
+    JOIN 
+        SeriousDebate sd ON d.debateID = sd.debateID
+    LEFT JOIN 
+        Member m1 ON sd.computingID_minister_of_government = m1.computingID
+    LEFT JOIN 
+        Member m2 ON sd.computingID_member_of_government = m2.computingID
+    LEFT JOIN 
+        Member m3 ON sd.computingID_leader_of_opposition = m3.computingID
+    LEFT JOIN 
+        Member m4 ON sd.computingID_member_of_opposition = m4.computingID
+    WHERE 
+        d.debateDate = %s
+        AND d.debateType = 'Serious'
     """
 
     # Construct the query to fetch literary presentations
@@ -260,9 +310,13 @@ def events():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Execute the query to fetch debates
-    cursor.execute(debate_query, (event_date,))
-    debates = cursor.fetchall()
+    # Execute the query to fetch humorous debates
+    cursor.execute(humorous_query, (event_date,))
+    humorous_debates = cursor.fetchall()
+
+    # Execute the query to fetch serious debates
+    cursor.execute(serious_query, (event_date,))
+    serious_debates = cursor.fetchall()
 
     # Execute the query to fetch literary presentations
     cursor.execute(presentation_query, (event_date,))
@@ -273,7 +327,8 @@ def events():
     conn.close()
 
     # Render the template with debates, presentations, and event_date
-    return render_template('events.html', debates=debates, presentations=presentations, event_date=event_date)
+    return render_template('events.html', humorous_debates=humorous_debates, serious_debates=serious_debates,
+                           presentations=presentations, event_date=event_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
