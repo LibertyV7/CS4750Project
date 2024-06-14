@@ -90,30 +90,55 @@
         <button type="submit">Filter by Date</button>
     </form>
 
-    <div id="result-container">
-        {% if events %}
+    <div id="debates-container">
+        {% if debates %}
+        <h2>Debates</h2>
         <table>
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Presentation Title</th>
-                    <th>Debate Resolution</th>
-                    <th>Debate Type</th>
+                    <th>Resolution</th>
+                    <th>Type</th>
                 </tr>
             </thead>
             <tbody>
-                {% for event in events %}
+                {% for debate in debates %}
                     <tr>
-                        <td>{{ event[0] }}</td>
-                        <td>{{ event[1] }}</td>
-                        <td>{{ event[2] }}</td>
-                        <td>{{ event[3] }}</td>
+                        <td>{{ debate[0] }}</td>
+                        <td>{{ debate[1] }}</td>
+                        <td>{{ debate[2] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
-        <p>No events found for the selected date.</p>
+        <p>No debates found for the selected date.</p>
+        {% endif %}
+    </div>
+
+    <div id="presentations-container">
+        {% if presentations %}
+        <h2>Literary Presentations</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Title</th>
+                    <th>Presenter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for presentation in presentations %}
+                    <tr>
+                        <td>{{ presentation[0] }}</td>
+                        <td>{{ presentation[1] }}</td>
+                        <td>{{ presentation[2] }} {{ presentation[3] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No literary presentations found for the selected date.</p>
         {% endif %}
     </div>
 </body>

@@ -164,7 +164,7 @@ def edit_requirements():
                 current_value = state[int(col) - 2]  # Adjusting for 0-based index
 
                 if new_value != current_value:
-                    query = f"UPDATE provierequirements SET {db_col} = %s WHERE provID = %s"
+                    query = f"UPDATE ProvieRequirements SET {db_col} = %s WHERE provID = %s"
                     cursor.execute(query, (new_value, provID))
 
         conn.commit()
@@ -193,7 +193,7 @@ def edit_requirements():
 def debates():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from debate')
+    cursor.execute('select * from Debate')
     debates = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -201,7 +201,7 @@ def debates():
 
 @app.route('/literary-presentations')
 def literary_presentations():
-    query = "SELECT lp.*, m.firstName, m.lastName FROM literarypresentation lp JOIN member m ON lp.computingID = m.computingID WHERE 1 = 1"
+    query = "SELECT lp.*, m.firstName, m.lastName FROM LiteraryPresentation lp JOIN Member m ON lp.computingID = m.computingID WHERE 1 = 1"
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(query)
@@ -214,11 +214,66 @@ def literary_presentations():
 def officers():
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("""SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN member m ON o.computingID = m.computingID WHERE 1 = 1""");
+    cursor.execute("""SELECT o.*, m.firstName, m.lastName FROM Officers o JOIN Member m ON o.computingID = m.computingID WHERE 1 = 1""");
     officers = cursor.fetchall()
     cursor.close()
     conn.close()
     return render_template('officers.html', officers=officers)
+
+@app.route('/events', methods=['GET'])
+def events():
+    # Get the date from the query parametersgit
+    event_date = request.args.get('date')
+
+    # Construct the query to fetch debates
+    debate_query = """
+    SELECT 
+        debateDate AS eventDate,
+        resolution AS debateResolution,
+        debateType AS debateType,
+        NULL AS presentationTitle,
+        NULL AS presenterName
+    FROM 
+        Debate
+    WHERE 
+        debateDate = %s
+    """
+
+    # Construct the query to fetch literary presentations
+    presentation_query = """
+    SELECT 
+        lp.presentationDate AS eventDate,
+        lp.title AS presentationTitle,
+        m.firstName AS presenterFirstName,
+        m.lastName AS presenterLastName,
+        NULL AS debateResolution,
+        NULL AS debateType
+    FROM 
+        LiteraryPresentation lp
+    JOIN 
+        Member m ON lp.computingID = m.computingID
+    WHERE 
+        lp.presentationDate = %s
+    """
+
+    # Connect to the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Execute the query to fetch debates
+    cursor.execute(debate_query, (event_date,))
+    debates = cursor.fetchall()
+
+    # Execute the query to fetch literary presentations
+    cursor.execute(presentation_query, (event_date,))
+    presentations = cursor.fetchall()
+
+    # Close the cursor and connection
+    cursor.close()
+    conn.close()
+
+    # Render the template with debates, presentations, and event_date
+    return render_template('events.html', debates=debates, presentations=presentations, event_date=event_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
