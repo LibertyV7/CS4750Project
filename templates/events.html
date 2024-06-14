@@ -68,6 +68,13 @@
         th {
             background-color: #f2f2f2;
         }
+        .title{
+            text-align: center;
+            font-size: 4em;
+                 }
+         .form-container{
+             text-align: center;
+         }
     </style>
 </head>
 <body>
@@ -81,8 +88,9 @@
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
-    <h1>Events</h1>
+    <h1 class="title">Events</h1>
 
+    <div class="form-container">
     <form method="GET" action="/events">
         <div class="input-section">
             <label for="date">Date:</label>
@@ -90,7 +98,7 @@
         </div>
         <button type="submit">Filter by Date</button>
     </form>
-
+    </div>
     <div id="humorous-debates-container">
         {% if humorous_debates %}
         <h2>Humorous Debates</h2>

@@ -79,7 +79,13 @@
 
         .button-container button {
             flex: 1;
-        }
+        }.title{
+            text-align: center;
+            font-size: 4em;
+                 }
+         .form-container{
+             text-align: center;
+         }
     </style>
 </head>
 <body>
@@ -93,7 +99,45 @@
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
-    <h1>Debate List</h1>
+    <h1 class="title">Debate List</h1>
+
+    <div class="form-container">
+        <h2>Filter and Search:</h2>
+    <form method="GET" action="/debates">
+        <div class="input-section">
+            <label for="date">Date:</label>
+            <input type="date" name="date" id="date" placeholder="YYYY-MM-DD">
+            <label for="resolution">Resolution:</label>
+            <input type="text" name="resolution" id="resolution" placeholder="Search">
+            <label for="debateType">Debate Type:</label>
+            <select name="debateType" id="debateType">
+                <option value="select">Select One</option>
+                <option value="Serious">Serious</option>
+                <option value="Humorous">Humorous</option>
+            </select>
+        </div>
+
+        <div class="input-section">
+            <label for="sort-select">Sort By:</label>
+            <select name="sort" id="sort">
+                <option value="debateID">Debate ID</option>
+                <option value="debateDate">Date</option>
+                <option value="resolution">Resolution</option>
+                <option value="debateType">Debate Type</option>
+                <option value="qualityGovernment">Quality Government</option>
+                <option value="qualityOpposition">Quality Opposition</option>
+                <option value="sentimentGovernment">Sentiment Government</option>
+                <option value="sentimentOpposition">Sentiment Opposition</option>
+                <option value="qualityOverall">Quality Overall</option>
+                <option value="sentimentOverall">Sentiment Overall</option>
+
+
+            </select>
+        </div>
+
+        <button type="submit">Filter and Sort</button>
+    </form>
+    </div>
 
     <div id="result-container">
         <table>

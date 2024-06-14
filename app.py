@@ -230,9 +230,30 @@ def edit_requirements():
 
 @app.route('/debates')
 def debates():
+    filter = {
+        'debateDate': request.args.get('date'),
+        'resolution': request.args.get('resolution'),
+        'debateType': request.args.get('debateType')
+    }
+    sort = request.args.get('sort')
+    query = '''SELECT * FROM Debate WHERE 1=1'''
+    params = []
+    for key, value in filter.items():
+        if value:
+            if key == 'debateType':
+                if value != 'select':
+                    query += f" AND {key} LIKE %s"
+                    params.append(f"{value}%")
+            else:
+                query += f" AND {key} LIKE %s"
+                params.append(f"{value}%")
+    if sort:
+        query += f" ORDER BY {sort}"
+    print(query)
+    print(params)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('select * from Debate')
+    cursor.execute(query, params)
     debates = cursor.fetchall()
     cursor.close()
     conn.close()

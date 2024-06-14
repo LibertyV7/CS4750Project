@@ -68,7 +68,13 @@
         }
         th {
             background-color: #f2f2f2;
-        }
+        }.title{
+            text-align: center;
+            font-size: 4em;
+                 }
+         .form-container{
+             text-align: center;
+         }
     </style>
 </head>
 <body>
@@ -82,8 +88,10 @@
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
-    <h1>Officer List</h1>
+    <h1 class="title">Officer List</h1>
 
+    <div class="form-container">
+        <h2>Filter and Search:</h2>
     <form method="GET" action="/members">
         <div class="input-section">
             <label for="id">Computing ID:</label>
@@ -137,6 +145,7 @@
 
         <button type="submit">Filter and Sort</button>
     </form>
+    </div>
 
     <div id="result-container">
         <table>
