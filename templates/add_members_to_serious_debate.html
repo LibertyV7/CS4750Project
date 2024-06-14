@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Members to Serious Debate</title>
+</head>
+<body>
+    <h1>Add Members to Serious Debate</h1>
+    <form action="{{ url_for('add_members_to_serious_debate') }}" method="POST">
+        <label for="debate_id">Select Debate:</label>
+        <select name="debate_id" id="debate_id" required>
+            {% for debate in debates %}
+                <option value="{{ debate[0] }}">{{ debate[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="minister_of_government">Prime Minister of Government:</label>
+        <select name="minister_of_government" id="minister_of_government" required>
+            {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }} {{ member[2] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="member_of_government">Member of Government:</label>
+        <select name="member_of_government" id="member_of_government" required>
+            {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }} {{ member[2] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="leader_of_opposition">Leader of Opposition:</label>
+        <select name="leader_of_opposition" id="leader_of_opposition" required>
+            {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }} {{ member[2] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="member_of_opposition">Member of Opposition:</label>
+        <select name="member_of_opposition" id="member_of_opposition" required>
+            {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }} {{ member[2] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <button type="submit">Add Members</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Debaters</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: "Times New Roman", sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation styles */
+        nav {
+            background-color: #960001;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #b40b0c;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Form and button styles */
+        form {
+            width: 50%;
+            margin: auto;
+            margin-top: 20px; /* Adjust as needed */
+        }
+        .input-section {
+            margin-bottom: 10px;
+        }
+        .input-section label {
+            margin-right: 10px;
+        }
+        .input-section input,
+        .input-section select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[type="submit"], button[type="button"] {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover, button[type="button"]:hover {
+            background-color: #b40b0c;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/members">Members</a>
+        <a href="/events">Schedule</a>
+        <a href="/requirements">Provie Hub</a>
+        <a href="/debates">Debates</a>
+        <a href="/literary-presentations">Literary Presentations</a>
+        <a href="/officers">Officers</a>
+    </nav>
+    <h1>Our Debaters</h1>
+
+    <h2>Serious Debates</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Resolution</th>
+                <th>Prime Minister of Government</th>
+                <th>Member of Government</th>
+                <th>Leader of Opposition</th>
+                <th>Member of Opposition</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for debate in serious_debates %}
+            <tr>
+                <td>{{ debate[0] }}</td>
+                <td>{{ debate[1] }}</td>
+                <td>{{ debate[2] }} {{ debate[3] }}</td>
+                <td>{{ debate[4] }} {{ debate[5] }}</td>
+                <td>{{ debate[6] }} {{ debate[7] }}</td>
+                <td>{{ debate[8] }} {{ debate[9] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to Add Members to Serious Debate -->
+    <form action="{{ url_for('add_members_to_serious_debate') }}" method="GET" style="text-align: center;">
+        <button type="submit" style="margin-top: 20px;">Add Members to Serious Debate</button>
+    </form>
+
+    <h2>Humorous Debates</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Resolution</th>
+                <th>Government 1</th>
+                <th>Government 2</th>
+                <th>Government 3</th>
+                <th>Opposition 1</th>
+                <th>Opposition 2</th>
+                <th>Opposition 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for debate in humorous_debates %}
+            <tr>
+                <td>{{ debate[0] }}</td>
+                <td>{{ debate[1] }}</td>
+                <td>{{ debate[2] }} {{ debate[3] }}</td>
+                <td>{{ debate[4] }} {{ debate[5] }}</td>
+                <td>{{ debate[6] }} {{ debate[7] }}</td>
+                <td>{{ debate[8] }} {{ debate[9] }}</td>
+                <td>{{ debate[10] }} {{ debate[11] }}</td>
+                <td>{{ debate[12] }} {{ debate[13] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to Add Members to Humorous Debate -->
+    <form action="{{ url_for('add_members_to_humorous_debate') }}" method="GET" style="text-align: center;">
+        <button type="submit" style="margin-top: 20px;">Add Members to Humorous Debate</button>
+    </form>
+
+</body>
+</html>

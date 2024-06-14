@@ -69,6 +69,24 @@
         th {
             background-color: #f2f2f2;
         }
+
+        /* Add and Update forms toggle button styles */
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .add-update-button {
+            padding: 10px 20px;
+            background-color: #960001;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .add-update-button:hover {
+            background-color: #b40b0c;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +96,7 @@
         <a href="/events">Schedule</a>
         <a href="/requirements">Provie Hub</a>
         <a href="/debates">Debates</a>
+        <a href="/our_debaters">Our Debaters</a>
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
@@ -101,7 +120,6 @@
             <input type="text" name="author" id="author" placeholder="Search">
         </div>
 
-
         <div class="input-section">
             <label for="sort-select">Sort By:</label>
             <select name="sort" id="sort">
@@ -119,29 +137,85 @@
 
     <div id="result-container">
         <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Computing ID </th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Title</th>
-                <th>Author</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for presentation in literarypresentations %}
+            <thead>
                 <tr>
-                    <td>{{ presentation[1]}}</td>
-                    <td>{{ presentation[2]}}</td>
-                    <td>{{ presentation[5]}}</td>
-                    <td>{{ presentation[6] }}</td>
-                    <td>{{ presentation[3]}}</td>
-                    <td>{{ presentation[4]}}</td>
+                    <th>Date</th>
+                    <th>Computing ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Title</th>
+                    <th>Author</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for presentation in literarypresentations %}
+                    <tr>
+                        <td>{{ presentation[1] }}</td>
+                        <td>{{ presentation[2] }}</td>
+                        <td>{{ presentation[5] }}</td>
+                        <td>{{ presentation[6] }}</td>
+                        <td>{{ presentation[3] }}</td>
+                        <td>{{ presentation[4] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+
+    <div class="button-container">
+        <!-- Toggle Add Literary Presentation Form -->
+        <button class="add-update-button" onclick="toggleAddForm()">Add Literary Presentation</button>
+        <form id="add-presentation-form" method="POST" action="/add_literary_presentation" style="display: none;">
+            <div class="input-section">
+                <label for="presentation_date">Presentation Date:</label>
+                <input type="text" id="presentation_date" name="presentation_date" placeholder="YYYY-MM-DD">
+                <label for="computing_id">Computing ID:</label>
+                <input type="text" id="computing_id" name="computing_id" placeholder="Enter Computing ID">
+            </div>
+            <div class="input-section">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" placeholder="Enter Title">
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" placeholder="Enter Author">
+            </div>
+            <button type="submit">Add Presentation</button>
+        </form>
+
+        <!-- Toggle Update Literary Presentation Form -->
+        <button class="add-update-button" onclick="toggleUpdateForm()">Update Presentation Details</button>
+        <form id="update-presentation-form" method="POST" action="/update_literary_presentation" style="display: none;">
+            <div class="input-section">
+                <label for="update-presentation-id">Update Presentation by ID:</label>
+                <input type="text" id="update-presentation-id" name="presentation_id" placeholder="Enter Presentation ID">
+            </div>
+            <div class="input-section">
+                <label for="update-title">Title:</label>
+                <input type="text" id="update-title" name="update_title" placeholder="Enter Updated Title">
+                <label for="update-author">Author:</label>
+                <input type="text" id="update-author" name="update_author" placeholder="Enter Updated Author">
+            </div>
+            <button type="submit">Update Details</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleAddForm() {
+            var addForm = document.getElementById("add-presentation-form");
+            if (addForm.style.display === "none") {
+                addForm.style.display = "block";
+            } else {
+                addForm.style.display = "none";
+            }
+        }
+
+        function toggleUpdateForm() {
+            var updateForm = document.getElementById("update-presentation-form");
+            if (updateForm.style.display === "none") {
+                updateForm.style.display = "block";
+            } else {
+                updateForm.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>

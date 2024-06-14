@@ -43,7 +43,7 @@
         .input-section select {
             width: 150px;
         }
-        button[type="submit"] {
+        button[type="submit"], .add-form button, .update-votes-form button {
             padding: 10px 20px;
             background-color: #960001;
             color: white;
@@ -51,7 +51,7 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        button[type="submit"]:hover {
+        button[type="submit"]:hover, .add-form button:hover, .update-votes-form button:hover {
             background-color: #b40b0c;
         }
         table {
@@ -69,6 +69,17 @@
         th {
             background-color: #f2f2f2;
         }
+
+        /* Custom button layout */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +89,7 @@
         <a href="/events">Schedule</a>
         <a href="/requirements">Provie Hub</a>
         <a href="/debates">Debates</a>
+        <a href="/our_debaters">Our Debaters</a>
         <a href="/literary-presentations">Literary Presentations</a>
         <a href="/officers">Officers</a>
     </nav>
@@ -85,37 +97,37 @@
 
     <div id="result-container">
         <table>
-        <thead>
-            <tr>
-                <th>Debate ID</th>
-                <th>Date</th>
-                <th>Resolution </th>
-                <th>Debate Type</th>
-                <th>Quality Government</th>
-                <th>Quality Opposition</th>
-                <th>Sentiment Government</th>
-                <th>Sentiment Opposition</th>
-                <th>Quality Overall </th>
-                <th> Sentiment Overall</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for debate in debates %}
+            <thead>
                 <tr>
-                    <td>{{ debate[0]}}</td>
-                    <td>{{ debate[1]}}</td>
-                    <td>{{ debate[2]}}</td>
-                    <td>{{ debate[3]}}</td>
-                    <td>{{ debate[4]}}</td>
-                    <td>{{ debate[5]}}</td>
-                    <td>{{ debate[6]}}</td>
-                    <td>{{ debate[7]}}</td>
-                    <td>{{ debate[8]}}</td>
-                    <td>{{ debate[9]}}</td>
+                    <th>Debate ID</th>
+                    <th>Date</th>
+                    <th>Resolution</th>
+                    <th>Debate Type</th>
+                    <th>Quality Government</th>
+                    <th>Quality Opposition</th>
+                    <th>Sentiment Government</th>
+                    <th>Sentiment Opposition</th>
+                    <th>Quality Overall</th>
+                    <th>Sentiment Overall</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for debate in debates %}
+                <tr>
+                    <td>{{ debate[0] }}</td>
+                    <td>{{ debate[1] }}</td>
+                    <td>{{ debate[2] }}</td>
+                    <td>{{ debate[3] }}</td>
+                    <td>{{ debate[4] }}</td>
+                    <td>{{ debate[5] }}</td>
+                    <td>{{ debate[6] }}</td>
+                    <td>{{ debate[7] }}</td>
+                    <td>{{ debate[8] }}</td>
+                    <td>{{ debate[9] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     <div class="delete-form">
         <form method="POST" action="/delete_debate">
@@ -125,52 +137,56 @@
         </form>
     </div>
 
-    <div class="add-form">
-        <button onclick="toggleAddForm()">Add Debate</button>
-        <form id="add-debate-form" method="POST" action="/add_debate" style="display: none;">
-            <label for="debate_date">Debate Date:</label>
-            <input type="text" id="debate_date" name="debate_date" placeholder="YYYY-MM-DD">
-            <label for="resolution">Resolution:</label>
-            <input type="text" id="resolution" name="resolution" placeholder="Enter Resolution">
-            <label for="debate_type">Debate Type:</label>
-            <input type="text" id="debate_type" name="debate_type" placeholder="Enter Debate Type">
-            <label for="gov_quality">Gov Quality:</label>
-            <input type="text" id="gov_quality" name="gov_quality" placeholder="Enter Gov Quality">
-            <label for="opp_quality">Opp Quality:</label>
-            <input type="text" id="opp_quality" name="opp_quality" placeholder="Enter Opp Quality">
-            <label for="gov_sentiment">Gov Sentiment:</label>
-            <input type="text" id="gov_sentiment" name="gov_sentiment" placeholder="Enter Gov Sentiment">
-            <label for="opp_sentiment">Opp Sentiment:</label>
-            <input type="text" id="opp_sentiment" name="opp_sentiment" placeholder="Enter Opp Sentiment">
-            <label for="overall_quality">Overall Quality:</label>
-            <input type="text" id="overall_quality" name="overall_quality" placeholder="Enter Overall Quality">
-            <label for="overall_sentiment">Overall Sentiment:</label>
-            <input type="text" id="overall_sentiment" name="overall_sentiment" placeholder="Enter Overall Sentiment">
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+    <div class="button-container">
+        <div class="add-form">
+            <button onclick="toggleAddForm()">Add Debate</button>
+            <form id="add-debate-form" method="POST" action="/add_debate" style="display: none;">
+                <div class="editor-note">
+                    <p>If debate has not yet occurred, leave votes empty.</p>
+                </div>
+                <label for="debate_date">Debate Date:</label>
+                <input type="text" id="debate_date" name="debate_date" placeholder="YYYY-MM-DD">
+                <label for="resolution">Resolution:</label>
+                <input type="text" id="resolution" name="resolution" placeholder="Enter Resolution">
+                <label for="debate_type">Debate Type:</label>
+                <input type="text" id="debate_type" name="debate_type" placeholder="Enter Debate Type">
+                <label for="gov_quality">Gov Quality:</label>
+                <input type="text" id="gov_quality" name="gov_quality" placeholder="Enter Gov Quality">
+                <label for="opp_quality">Opp Quality:</label>
+                <input type="text" id="opp_quality" name="opp_quality" placeholder="Enter Opp Quality">
+                <label for="gov_sentiment">Gov Sentiment:</label>
+                <input type="text" id="gov_sentiment" name="gov_sentiment" placeholder="Enter Gov Sentiment">
+                <label for="opp_sentiment">Opp Sentiment:</label>
+                <input type="text" id="opp_sentiment" name="opp_sentiment" placeholder="Enter Opp Sentiment">
+                <label for="overall_quality">Overall Quality:</label>
+                <input type="text" id="overall_quality" name="overall_quality" placeholder="Enter Overall Quality">
+                <label for="overall_sentiment">Overall Sentiment:</label>
+                <input type="text" id="overall_sentiment" name="overall_sentiment" placeholder="Enter Overall Sentiment">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
 
-    <div class="update-votes-form">
-        <button onclick="toggleUpdateForm()">Update Debate Votes</button>
-        <form id="update-debate-votes-form" method="POST" action="/update_debate_votes" style="display: none;">
-            <label for="update-debate-id">Update Debate by ID:</label>
-            <input type="text" id="update-debate-id" name="debate_id" placeholder="Enter Debate ID">
-            <label for="quality-government">Quality Government:</label>
-            <input type="text" id="quality-government" name="quality_government" placeholder="Enter Quality Government">
-            <label for="quality-opposition">Quality Opposition:</label>
-            <input type="text" id="quality-opposition" name="quality_opposition" placeholder="Enter Quality Opposition">
-            <label for="sentiment-government">Sentiment Government:</label>
-            <input type="text" id="sentiment-government" name="sentiment_government" placeholder="Enter Sentiment Government">
-            <label for="sentiment-opposition">Sentiment Opposition:</label>
-            <input type="text" id="sentiment-opposition" name="sentiment_opposition" placeholder="Enter Sentiment Opposition">
-            <label for="quality-overall">Quality Overall:</label>
-            <input type="text" id="quality-overall" name="quality_overall" placeholder="Enter Quality Overall">
-            <label for="sentiment-overall">Sentiment Overall:</label>
-            <input type="text" id="sentiment-overall" name="sentiment_overall" placeholder="Enter Sentiment Overall">
-            <button type="submit">Update Votes</button>
-        </form>
+        <div class="update-votes-form">
+            <button onclick="toggleUpdateForm()">Update Debate Votes</button>
+            <form id="update-debate-votes-form" method="POST" action="/update_debate_votes" style="display: none;">
+                <label for="update-debate-id">Update Debate by ID:</label>
+                <input type="text" id="update-debate-id" name="debate_id" placeholder="Enter Debate ID">
+                <label for="quality-government">Quality Government:</label>
+                <input type="text" id="quality-government" name="quality_government" placeholder="Enter Quality Government">
+                <label for="quality-opposition">Quality Opposition:</label>
+                <input type="text" id="quality-opposition" name="quality_opposition" placeholder="Enter Quality Opposition">
+                <label for="sentiment-government">Sentiment Government:</label>
+                <input type="text" id="sentiment-government" name="sentiment_government" placeholder="Enter Sentiment Government">
+                <label for="sentiment-opposition">Sentiment Opposition:</label>
+                <input type="text" id="sentiment-opposition" name="sentiment_opposition" placeholder="Enter Sentiment Opposition">
+                <label for="quality-overall">Quality Overall:</label>
+                <input type="text" id="quality-overall" name="quality_overall" placeholder="Enter Quality Overall">
+                <label for="sentiment-overall">Sentiment Overall:</label>
+                <input type="text" id="sentiment-overall" name="sentiment_overall" placeholder="Enter Sentiment Overall">
+                <button type="submit">Update Votes</button>
+            </form>
+        </div>
     </div>
-
 
     <script>
         function toggleAddForm() {

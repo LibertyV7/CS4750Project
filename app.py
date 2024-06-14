@@ -178,7 +178,6 @@ def edit_requirements():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Map column indices to database column names
         column_mapping = {
             '2': 'completed',
             '3': 'attendance',
@@ -190,7 +189,6 @@ def edit_requirements():
             '9': 'literaryPresentation'
         }
 
-        # Fetch current state to determine what was unchecked
         query = """
             SELECT provID, completed, attendance, fullMeeting, historyTour, majorService, minorService, debate, literaryPresentation
             FROM ProvieRequirements
@@ -214,7 +212,6 @@ def edit_requirements():
         conn.close()
         return redirect('/requirements')
 
-    # Fetch data for display
     query = """
         SELECT pr.*, m.firstName, m.lastName, m.computingID, m.duesPaid 
         FROM ProvieRequirements pr
@@ -244,7 +241,7 @@ def debates():
 
 @app.route('/add_debate', methods=['POST'])
 def add_debate():
-    # Extract form data
+
     debate_date = request.form['debate_date']
     resolution = request.form['resolution']
     debate_type = request.form['debate_type']
@@ -255,7 +252,6 @@ def add_debate():
     overall_quality = request.form['overall_quality']
     overall_sentiment = request.form['overall_sentiment']
 
-    # Insert into database
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('INSERT INTO Debate (debateDate, resolution, debateType) VALUES (%s, %s, %s)',
@@ -269,7 +265,7 @@ def add_debate():
 
 @app.route('/update_debate_votes', methods=['POST'])
 def update_debate_votes():
-    # Extract form data
+
     debate_id = request.form['debate_id']
     quality_government = request.form['quality_government']
     quality_opposition = request.form['quality_opposition']
@@ -278,7 +274,7 @@ def update_debate_votes():
     quality_overall = request.form['quality_overall']
     sentiment_overall = request.form['sentiment_overall']
 
-    # Update debate votes in database
+
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(
@@ -298,12 +294,147 @@ def delete_debate():
 
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM SeriousDebate WHERE debateID = %s', (debate_id,))
+    cursor.execute('DELETE FROM HumorousDebate WHERE debateID = %s', (debate_id,))
+
     cursor.execute('DELETE FROM Debate WHERE debateID = %s', (debate_id,))
+
     conn.commit()
     cursor.close()
     conn.close()
 
     return redirect(url_for('debates'))
+
+@app.route('/our_debaters')
+def our_debaters():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    serious_query = """
+    SELECT d.debateDate, d.resolution,
+           GROUP_CONCAT(m1.firstName) AS govFirstNames,
+           GROUP_CONCAT(m1.lastName) AS govLastNames,
+           GROUP_CONCAT(m2.firstName) AS gov2FirstNames,
+           GROUP_CONCAT(m2.lastName) AS gov2LastNames,
+           GROUP_CONCAT(m3.firstName) AS oppFirstNames,
+           GROUP_CONCAT(m3.lastName) AS oppLastNames,
+           GROUP_CONCAT(m4.firstName) AS opp2FirstNames,
+           GROUP_CONCAT(m4.lastName) AS opp2LastNames
+    FROM Debate d
+    LEFT JOIN SeriousDebate sd ON d.debateID = sd.debateID
+    LEFT JOIN Member m1 ON sd.computingID_minister_of_government = m1.computingID
+    LEFT JOIN Member m2 ON sd.computingID_member_of_government = m2.computingID
+    LEFT JOIN Member m3 ON sd.computingID_leader_of_opposition = m3.computingID
+    LEFT JOIN Member m4 ON sd.computingID_member_of_opposition = m4.computingID
+    WHERE d.debateType = 'Serious'
+    GROUP BY d.debateID, d.debateDate, d.resolution;
+    """
+
+
+    humorous_query = """
+    SELECT d.debateDate, d.resolution,
+           GROUP_CONCAT(m1.firstName) AS gov1FirstNames,
+           GROUP_CONCAT(m1.lastName) AS gov1LastNames,
+           GROUP_CONCAT(m2.firstName) AS gov2FirstNames,
+           GROUP_CONCAT(m2.lastName) AS gov2LastNames,
+           GROUP_CONCAT(m3.firstName) AS gov3FirstNames,
+           GROUP_CONCAT(m3.lastName) AS gov3LastNames,
+           GROUP_CONCAT(m4.firstName) AS opp1FirstNames,
+           GROUP_CONCAT(m4.lastName) AS opp1LastNames,
+           GROUP_CONCAT(m5.firstName) AS opp2FirstNames,
+           GROUP_CONCAT(m5.lastName) AS opp2LastNames,
+           GROUP_CONCAT(m6.firstName) AS opp3FirstNames,
+           GROUP_CONCAT(m6.lastName) AS opp3LastNames
+    FROM Debate d
+    LEFT JOIN HumorousDebate hd ON d.debateID = hd.debateID
+    LEFT JOIN Member m1 ON hd.computingID_gov1 = m1.computingID
+    LEFT JOIN Member m2 ON hd.computingID_gov2 = m2.computingID
+    LEFT JOIN Member m3 ON hd.computingID_gov3 = m3.computingID
+    LEFT JOIN Member m4 ON hd.computingID_opp1 = m4.computingID
+    LEFT JOIN Member m5 ON hd.computingID_opp2 = m5.computingID
+    LEFT JOIN Member m6 ON hd.computingID_opp3 = m6.computingID
+    WHERE d.debateType = 'Humorous'
+    GROUP BY d.debateID, d.debateDate, d.resolution;
+    """
+
+    cursor.execute(serious_query)
+    serious_debates = cursor.fetchall()
+
+    cursor.execute(humorous_query)
+    humorous_debates = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template('our_debaters.html', serious_debates=serious_debates, humorous_debates=humorous_debates)
+
+
+@app.route('/add_members_to_serious_debate', methods=['GET', 'POST'])
+def add_members_to_serious_debate():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        debate_id = request.form['debate_id']
+        minister_of_government = request.form['minister_of_government']
+        member_of_government = request.form['member_of_government']
+        leader_of_opposition = request.form['leader_of_opposition']
+        member_of_opposition = request.form['member_of_opposition']
+
+        cursor.execute(
+            'INSERT INTO SeriousDebate (debateID, computingID_minister_of_government, computingID_member_of_government, computingID_leader_of_opposition, computingID_member_of_opposition) VALUES (%s, %s, %s, %s, %s)',
+            (debate_id, minister_of_government, member_of_government, leader_of_opposition, member_of_opposition)
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('our_debaters'))
+
+    cursor.execute('SELECT debateID, resolution FROM Debate WHERE debateType = %s', ('Serious',))
+    debates = cursor.fetchall()
+    cursor.execute('SELECT computingID, firstName, lastName FROM Member')
+    members = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return render_template('add_members_to_serious_debate.html', debates=debates, members=members)
+
+@app.route('/add_members_to_humorous_debate', methods=['GET', 'POST'])
+def add_members_to_humorous_debate():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+
+        debate_id = request.form['debate_id']
+        computingID_gov1 = request.form['computingID_gov1']
+        computingID_gov2 = request.form['computingID_gov2']
+        computingID_gov3 = request.form['computingID_gov3']
+        computingID_opp1 = request.form['computingID_opp1']
+        computingID_opp2 = request.form['computingID_opp2']
+        computingID_opp3 = request.form['computingID_opp3']
+
+        cursor.execute(
+            'INSERT INTO HumorousDebate (debateID, computingID_gov1, computingID_gov2, computingID_gov3, computingID_opp1, computingID_opp2, computingID_opp3) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+            (debate_id, computingID_gov1, computingID_gov2, computingID_gov3, computingID_opp1, computingID_opp2, computingID_opp3)
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect(url_for('our_debaters'))
+
+    cursor.execute('SELECT debateID, resolution FROM Debate WHERE debateType = %s', ('Humorous',))
+    debates = cursor.fetchall()
+    cursor.execute('SELECT computingID, firstName, lastName FROM Member')
+    members = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return render_template('add_members_to_humorous_debate.html', debates=debates, members=members)
+
 
 @app.route('/literary-presentations')
 def literary_presentations():
@@ -315,6 +446,41 @@ def literary_presentations():
     cursor.close()
     conn.close()
     return render_template('literary_presentations.html', literarypresentations=literarypresentations)
+
+@app.route('/add_literary_presentation', methods=['POST'])
+def add_literary_presentation():
+
+    presentation_date = request.form['presentation_date']
+    computing_id = request.form['computing_id']
+    title = request.form['title']
+    author = request.form['author']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO LiteraryPresentation (presentationDate, computingID, title, author) VALUES (%s, %s, %s, %s)',
+                   (presentation_date, computing_id, title, author))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('literary_presentations'))
+
+@app.route('/update_literary_presentation', methods=['POST'])
+def update_literary_presentation():
+
+    presentation_id = request.form['presentation_id']
+    updated_title = request.form['update_title']
+    updated_author = request.form['update_author']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE LiteraryPresentation SET title = %s, author = %s WHERE literarypresentationID = %s',
+                   (updated_title, updated_author, presentation_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('literary_presentations'))
 
 
 @app.route('/officers')
@@ -331,10 +497,8 @@ def officers():
 
 @app.route('/events', methods=['GET'])
 def events():
-    # Get the date from the query parameters
     event_date = request.args.get('date')
 
-    # Construct the query to fetch humorous debates with debaters' names
     humorous_query = """
     SELECT 
         d.debateDate AS eventDate,
@@ -369,7 +533,7 @@ def events():
         AND d.debateType = 'Humorous'
     """
 
-    # Construct the query to fetch serious debates with debaters' names
+
     serious_query = """
     SELECT 
         d.debateDate AS eventDate,
@@ -398,7 +562,6 @@ def events():
         AND d.debateType = 'Serious'
     """
 
-    # Construct the query to fetch literary presentations
     presentation_query = """
     SELECT 
         lp.presentationDate AS eventDate,
@@ -415,27 +578,21 @@ def events():
         lp.presentationDate = %s
     """
 
-    # Connect to the database
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Execute the query to fetch humorous debates
     cursor.execute(humorous_query, (event_date,))
     humorous_debates = cursor.fetchall()
 
-    # Execute the query to fetch serious debates
     cursor.execute(serious_query, (event_date,))
     serious_debates = cursor.fetchall()
 
-    # Execute the query to fetch literary presentations
     cursor.execute(presentation_query, (event_date,))
     presentations = cursor.fetchall()
 
-    # Close the cursor and connection
     cursor.close()
     conn.close()
 
-    # Render the template with debates, presentations, and event_date
     return render_template('events.html', humorous_debates=humorous_debates, serious_debates=serious_debates,
                            presentations=presentations, event_date=event_date)
 
