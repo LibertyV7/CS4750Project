@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Debate</title>
+</head>
+<body>
+    <h1>Add Debate</h1>
+    <form method="POST" action="/add_debate">
+        <label for="debate_date">Date:</label>
+        <input type="text" id="debate_date" name="debate_date" required><br><br>
+
+        <label for="resolution">Resolution:</label>
+        <input type="text" id="resolution" name="resolution" required><br><br>
+
+        <label for="debate_type">Type:</label>
+        <input type="text" id="debate_type" name="debate_type" required><br><br>
+        <button type="submit">Add Debate</button>
+    </form>
+</body>
+</html>

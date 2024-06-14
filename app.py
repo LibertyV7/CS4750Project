@@ -228,6 +228,70 @@ def debates():
     conn.close()
     return render_template('debates.html', debates=debates)
 
+@app.route('/add_debate', methods=['POST'])
+def add_debate():
+    # Extract form data
+    debate_date = request.form['debate_date']
+    resolution = request.form['resolution']
+    debate_type = request.form['debate_type']
+    gov_quality = request.form['gov_quality']
+    opp_quality = request.form['opp_quality']
+    gov_sentiment = request.form['gov_sentiment']
+    opp_sentiment = request.form['opp_sentiment']
+    overall_quality = request.form['overall_quality']
+    overall_sentiment = request.form['overall_sentiment']
+
+    # Insert into database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO Debate (debateDate, resolution, debateType) VALUES (%s, %s, %s)',
+                   (debate_date, resolution, debate_type))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('debates'))
+
+@app.route('/update_debate_votes', methods=['POST'])
+def update_debate_votes():
+    # Extract form data
+    debate_id = request.form['debate_id']
+    quality_government = request.form['quality_government']
+    quality_opposition = request.form['quality_opposition']
+    sentiment_government = request.form['sentiment_government']
+    sentiment_opposition = request.form['sentiment_opposition']
+    quality_overall = request.form['quality_overall']
+    sentiment_overall = request.form['sentiment_overall']
+
+    # Update debate votes in database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE Debate SET qualityGovernment = %s, qualityOpposition = %s, sentimentGovernment = %s, sentimentOpposition = %s, qualityOverall = %s, sentimentOverall = %s WHERE debateID = %s',
+                   (quality_government, quality_opposition, sentiment_government, sentiment_opposition, quality_overall, sentiment_overall, debate_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('debates'))
+
+
+
+
+@app.route('/delete_debate', methods=['POST'])
+def delete_debate():
+    debate_id = request.form['debate_id']
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM Debate WHERE debateID = %s', (debate_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('debates'))
+
+
+
 @app.route('/literary-presentations')
 def literary_presentations():
     query = "SELECT lp.*, m.firstName, m.lastName FROM LiteraryPresentation lp JOIN Member m ON lp.computingID = m.computingID WHERE 1 = 1"
