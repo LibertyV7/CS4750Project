@@ -359,5 +359,9 @@ def events():
     return render_template('events.html', humorous_debates=humorous_debates, serious_debates=serious_debates,
                            presentations=presentations, event_date=event_date)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
